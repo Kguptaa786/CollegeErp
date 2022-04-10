@@ -58,7 +58,7 @@ function AddStudent() {
         studentDepartment,
         studentFatherName,
         studentAadharNumber,
-        studentDob,
+
         studentGender,
         studentSection,
         studentContactNumber,
@@ -183,7 +183,7 @@ function AddStudent() {
                 />
               </RadioGroup>
             </FormControl>
-            <FormControl fullWidth sx={{ m: 2 }}>
+            {/* <FormControl fullWidth sx={{ m: 2 }}>
               <FormLabel id="demo-row-radio-buttons-group-label">
                 Date of Birth
               </FormLabel>
@@ -193,7 +193,7 @@ function AddStudent() {
                 value={studentDob}
                 onChange={setStudentDob}
               />
-            </FormControl>
+            </FormControl> */}
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
                 id="standard-basic"
