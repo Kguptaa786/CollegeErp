@@ -10,7 +10,7 @@ studentLogin:async(req,res,next)=>{
         }
         
     }catch{
-
+         console.log("error");
     }
 }
 updateProfile:async(req,res,next)=>{
