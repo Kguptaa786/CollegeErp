@@ -3,7 +3,9 @@ const Admin = require("./models/admin");
 const Student = require("./models/student");
 const Faculty = require("./models/faculty");
 const Subject = require("./models/subject");
-addAdmin: async (req, res, next) => {
+
+module.exports={
+  addAdmin: async (req, res, next) => {
   try {
     const { name, dob, email, contactNumber, department } = req.body;
     if (!name || !dob || !email || !contactNumber || !department) {
@@ -72,7 +74,7 @@ addAdmin: async (req, res, next) => {
       .status(400)
       .json({ success: false, message: "Admin not registered" });
   }
-};
+},
 
 getAllStudents: async (req, res, next) => {
   try {
@@ -85,7 +87,7 @@ getAllStudents: async (req, res, next) => {
   } catch (e) {
     res.status(400).json({ message: "not found" });
   }
-};
+},
 getAllStudents: async (req, res, next) => {
   try {
     const students = await Student.find({});
@@ -96,7 +98,7 @@ getAllStudents: async (req, res, next) => {
   } catch (e) {
     res.status(400).json({ message: "not found" });
   }
-};
+},
 adminLogin: async (req, res, next) => {
   try {
     //validation needed
@@ -121,7 +123,7 @@ adminLogin: async (req, res, next) => {
   } catch (err) {
     console.log("Error in admin login", err.message);
   }
-};
+},
 
 addStudent: async (req, res, next) => {
   try {
@@ -191,7 +193,7 @@ addStudent: async (req, res, next) => {
   } catch (e) {
     res.status(400);
   }
-};
+},
 
 addFaculty: async (req, res, next) => {
   try {
@@ -260,7 +262,7 @@ addFaculty: async (req, res, next) => {
   } catch (e) {
     res.status(400);
   }
-};
+},
 getAllFaculty: async (req, res, next) => {
   try {
     const faculties = await Faculty.find({});
@@ -271,7 +273,7 @@ getAllFaculty: async (req, res, next) => {
   } catch (err) {
     res.status(400);
   }
-};
+},
 
 addSubject: async (req, res, next) => {
   try {
@@ -290,7 +292,7 @@ addSubject: async (req, res, next) => {
     });
     await newSubject.save();
   } catch (e) {}
-};
+},
 
 getAllSubjects: async (req, res, next) => {
   try {
@@ -300,7 +302,7 @@ getAllSubjects: async (req, res, next) => {
     }
     res.status(200).json(allsubjects);
   } catch (e) {}
-};
+},
 
 getAllFaculty: async (req, res, next) => {
   try {
@@ -310,7 +312,7 @@ getAllFaculty: async (req, res, next) => {
   } catch (e) {
     res.status(200);
   }
-};
+},
 
 getAllSubjects: async (req, res, next) => {
   try {
@@ -320,4 +322,5 @@ getAllSubjects: async (req, res, next) => {
   } catch (err) {
     console.log("Error in gettting all students", err.message);
   }
-};
+}
+}
