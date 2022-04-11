@@ -1,8 +1,8 @@
 const bcrypt = require("bcryptjs");
-const Admin = require("./models/admin");
-const Student = require("./models/student");
-const Faculty = require("./models/faculty");
-const Subject = require("./models/subject");
+const Admin = require("../models/admin");
+const Student = require("../models/student");
+const Faculty = require("../models/faculty");
+const Subject = require("../models/subject");
 
 module.exports = {
   addAdmin: async (req, res, next) => {
@@ -137,6 +137,7 @@ module.exports = {
         contactNumber,
         aadharNumber,
       } = req.data;
+      console.log(req.data);
       const student = await Student.findOne({ email });
       if (student) {
         //validation
