@@ -11,7 +11,7 @@ module.exports = {
       if (!name || !dob || !email || !contactNumber || !department) {
         res
           .status(400)
-          .json({ success: failure, message: "some data feilds are entry " });
+          .json({ success: failure, message: "some data fields are empty" });
       }
       const if_already_present = await res.findOne(email);
       if (if_already_present) {
