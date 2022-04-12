@@ -1,5 +1,7 @@
 const Student=require('./model/student.js');
 const bcrypt = require("bcryptjs")
+
+module.exports={
 studentLogin:async(req,res,next)=>{
     try{
         const{registrationnumber,password}=req.body;
@@ -128,4 +130,6 @@ attendence:async(req,res,next)=>{
     }catch(e){
 
     }
+}
+
 }

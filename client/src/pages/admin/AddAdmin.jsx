@@ -51,7 +51,7 @@ function AddStudent() {
           <NavbarAdmin />
         </Grid>
         <Grid item xs={12} md={6}>
-          <form onSubmit={submitHandler}>
+          <form onSubmit={submitHandler} noValidate>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
                 id="standard-basic"

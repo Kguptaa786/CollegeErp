@@ -1,15 +1,16 @@
 const express = require("express");
-require("./connection/connection");
-// const Admin = require("./models/admin");
-// const Faculty = require("./models/faculty");
-// const adminRoutes = require("./routes/adminRoutes");
 const cors = require("cors");
 
-// const Student=require('./models/student');
+//connection
+require("./connection/connection");
+
 const app = express();
+
+const adminRoutes = require("./routes/adminRoutes");
 
 const port = process.env.PORT || 4000;
 
+//middleware
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -18,14 +19,8 @@ app.get("/", (req, res) => {
   res.send("server started");
 });
 
-// app.use("/admin", adminRoutes);
-app.get("/admin/addStudent", (req, res) => {
-  console.log("chala");
-});
-
-app.post("/admin/addStudent", (req, res) => {
-  console.log(req.body);
-});
+//routes middleware
+app.use("/admin", adminRoutes);
 
 app.listen(port, () => {
   console.log(`connection at ${port}`);

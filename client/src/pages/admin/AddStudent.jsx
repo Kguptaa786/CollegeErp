@@ -1,4 +1,5 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
+import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { addStudent } from "../../store/actions/adminAction";
 import {
@@ -10,29 +11,14 @@ import {
   Button,
   MenuItem,
   FormControlLabel,
+  Box,
   FormLabel,
   Radio,
   RadioGroup,
 } from "@mui/material";
 import NavbarAdmin from "../../components/NavbarAdmin";
-import { makeStyles } from "@mui/styles";
-
-const useStyles = makeStyles({
-  root: {
-    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
-    border: 0,
-    borderRadius: 3,
-    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
-    color: "white",
-    height: 48,
-    padding: "0 30px",
-  },
-});
 
 function AddStudent() {
-  const classes = useStyles();
-  // const store = useSelector((store) => store);
-  const dispatch = useDispatch();
   const [studentName, setStudentName] = useState("");
   const [studentEmail, setStudentEmail] = useState("");
   const [studentDepartment, setStudentDepartment] = useState("");
@@ -45,26 +31,23 @@ function AddStudent() {
   const [studentFatherContactNumber, setStudentFatherContactNumber] =
     useState("");
   const [studentAadharNumber, setStudentAadharNumber] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
-    // setIsLoading(true);
-    dispatch(
-      addStudent({
+    await axios
+      .post("http://localhost:4000/admin/addStudent", {
         studentName,
         studentEmail,
-        studentYear,
         studentDepartment,
-        studentFatherName,
-        studentAadharNumber,
-
-        studentGender,
+        studentYear,
         studentSection,
+        studentGender,
+        studentDob,
         studentContactNumber,
+        studentFatherName,
         studentFatherContactNumber,
       })
-    );
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -72,11 +55,12 @@ function AddStudent() {
       <NavbarAdmin />
       <Grid container alignItems="center" justifyContent="center">
         <Grid item xs={12} md={6}>
-          <form onSubmit={submitHandler}>
+          <Box component="form" onSubmit={submitHandler} noValidate>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="standard-basic"
+                id="studentName"
                 label="Name"
+                type="text"
                 variant="standard"
                 value={studentName}
                 onChange={(e) => {
@@ -86,8 +70,9 @@ function AddStudent() {
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="standard-basic"
+                id="studentEmail"
                 label="Email"
+                type="email"
                 variant="standard"
                 value={studentEmail}
                 onChange={(e) => {
@@ -99,7 +84,7 @@ function AddStudent() {
               <InputLabel id="demo-simple-select-label">Department</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                id="studentDept"
                 label="Department"
                 value={studentDepartment}
                 onChange={(e) => {
@@ -123,7 +108,7 @@ function AddStudent() {
               <InputLabel id="demo-simple-select-label">Year</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                id="studentYear"
                 label="Year"
                 value={studentYear}
                 onChange={(e) => {
@@ -140,7 +125,7 @@ function AddStudent() {
               <InputLabel id="demo-simple-select-label">Section</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
-                id="demo-simple-select"
+                id="studentSection"
                 label="Section"
                 value={studentSection}
                 onChange={(e) => {
@@ -183,21 +168,22 @@ function AddStudent() {
                 />
               </RadioGroup>
             </FormControl>
-            {/* <FormControl fullWidth sx={{ m: 2 }}>
+            <FormControl fullWidth sx={{ m: 2 }}>
               <FormLabel id="demo-row-radio-buttons-group-label">
                 Date of Birth
               </FormLabel>
               <TextField
-                id="date"
+                id="studentDob"
                 type="date"
                 value={studentDob}
-                onChange={setStudentDob}
+                onChange={(e) => setStudentDob(e.target.value)}
               />
-            </FormControl> */}
+            </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="standard-basic"
+                id="studentContactNum"
                 label="Contact Number"
+                type="number"
                 variant="standard"
                 value={studentContactNumber}
                 onChange={(e) => {
@@ -207,8 +193,9 @@ function AddStudent() {
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="standard-basic"
+                id="studentFatherName"
                 label="Father Name"
+                type="text"
                 variant="standard"
                 value={studentFatherName}
                 onChange={(e) => {
@@ -218,8 +205,9 @@ function AddStudent() {
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="standard-basic"
+                id="studentFatherContactNum"
                 label="Father Contact Number"
+                type="number"
                 variant="standard"
                 value={studentFatherContactNumber}
                 onChange={(e) => {
@@ -229,7 +217,8 @@ function AddStudent() {
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="standard-basic"
+                id="aadharNum"
+                type="number"
                 label="Aadhar Card Number"
                 variant="standard"
                 value={studentAadharNumber}
@@ -245,7 +234,7 @@ function AddStudent() {
             >
               Submit
             </Button>
-          </form>
+          </Box>
         </Grid>
       </Grid>
     </Fragment>
