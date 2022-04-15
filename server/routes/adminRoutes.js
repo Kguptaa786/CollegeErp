@@ -2,6 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { addStudent } = require("../controllers/admincontroller");
 
-router.get("/addStudent", addStudent);
+router.post("/addStudent", addStudent);
 
 module.exports = router;

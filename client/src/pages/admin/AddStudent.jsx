@@ -1,7 +1,5 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
-import { addStudent } from "../../store/actions/adminAction";
 import {
   Grid,
   TextField,
@@ -36,17 +34,19 @@ function AddStudent() {
     event.preventDefault();
     await axios
       .post("http://localhost:4000/admin/addStudent", {
-        studentName,
-        studentEmail,
-        studentDepartment,
-        studentYear,
-        studentSection,
-        studentGender,
-        studentDob,
-        studentContactNumber,
-        studentFatherName,
-        studentFatherContactNumber,
+        name: studentName,
+        email: studentEmail,
+        department: studentDepartment,
+        year: studentYear,
+        section: studentSection,
+        gender: studentGender,
+        dob: studentDob,
+        contactNumber: studentContactNumber,
+        fatherName: studentFatherName,
+        fatherContactNumber: studentFatherContactNumber,
+        aadharNumber: studentAadharNumber,
       })
+      .then((res) => console.log(res))
       .catch((err) => console.log(err));
   };
 

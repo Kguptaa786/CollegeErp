@@ -1,49 +1,50 @@
 const mongoose = require("mongoose");
 
 const studentSchema = new mongoose.Schema({
-  studentName: {
+  name: {
     type: String,
     required: true,
   },
-  studentEmail: {
+  email: {
     type: String,
-    required: true,
+    require: true,
+    index: true,
     unique: true,
+    sparse: true,
   },
-  studentRegistrationNumber: {
+  registrationNumber: {
     type: String,
     required: true,
   },
-  studentDob: {
+  dob: {
     type: Date,
     required: true,
   },
-  studentYear: {
+  year: {
     type: Number,
     required: true,
   },
-  studentDepartment: {
+  department: {
     type: String,
     required: true,
   },
-  studentSection: {
+  section: {
     type: String,
     required: true,
-    enum: ["A", "B", "C"],
   },
-  studentBatch: {
+  batch: {
     type: Number,
     required: true,
   },
-  studentGender: {
+  gender: {
     type: String,
-    enum: ["male", "female", "other"],
+    required: true,
   },
-  studentContactNumber: {
+  contactNumber: {
     type: Number,
     unique: true,
   },
-  studentAadharNumber: {
+  aadharNumber: {
     type: Number,
     unique: true,
   },

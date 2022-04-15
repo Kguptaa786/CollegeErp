@@ -137,10 +137,10 @@ module.exports = {
         aadharNumber,
       } = req.body;
       console.log(req.body);
-      const student = await Student.findOne({ email });
-      if (student) {
-        //validation
-      }
+      // const student = await Student.findOne({ email });
+      // if (student) {
+      //   res.status(400).send("User Exist Already");
+      // }
       let departmentHelper;
       if (department === "C.S.E") {
         departmentHelper = "01";
@@ -160,7 +160,7 @@ module.exports = {
 
       // const students = await Student.find({ department });
       // let hashedPassword;
-      // hashedPassword = await bcrypt.hash(dob, 10);
+      const hashedPassword = await bcrypt.hash(dob, 4);
       // var date = new Date();
       // let helper;
       // if (students.length < 10) {
@@ -173,15 +173,15 @@ module.exports = {
       // let components = ["STU", date.getFullYear(), departmentHelper, helper];
 
       // let registrationNumber = components.join("");
-      let regisrationNumber = "STU2020";
-      let batch = new Date.getFullYear();
+      const regisrationNumber = "STU2020";
+      let batch = new Date(Date.now()).getFullYear().toString();
       const newStudent = await new Student({
         name,
         email,
         password: hashedPassword,
-        registrationNumber,
+        registrationNumber: regisrationNumber,
         dob,
-        year,
+        year: 2,
         department,
         section,
         batch,
@@ -190,8 +190,10 @@ module.exports = {
         aadharNumber,
       });
       await newStudent.save();
+      res.json({ data: newStudent });
     } catch (e) {
-      res.status(400);
+      console.log(e);
+      res.status(400).send(e);
     }
   },
 
