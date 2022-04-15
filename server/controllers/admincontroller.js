@@ -74,7 +74,7 @@ module.exports = {
   //   }
   // },
 
-  // getAllStudents: async (req, res, next) => {
+  // getStudents: async (req, res, next) => {
   //   try {
   //     const { department, year } = req.body;
   //     const students = await Student.find({ department, year });
@@ -283,7 +283,7 @@ module.exports = {
   //       req.data;
   //     const code = await Subject.findOne({ subjectcode });
   //     if (code) {
-  //       res.status(404).json({ message: "already present" });
+  //       return res.status(404).json({ message: "already present" });
   //     }
 
   //     const newSubject = await new Subject({
@@ -307,7 +307,7 @@ module.exports = {
   //   } catch (e) {}
   // },
 
-  // getAllFaculty: async (req, res, next) => {
+  // getFaculty: async (req, res, next) => {
   //   try {
   //     const { department } = req.body;
   //     const allfaculties = await Faculty.find({ department });
