@@ -17,34 +17,33 @@ import {
 import NavbarAdmin from "../../components/NavbarAdmin";
 
 function AddStudent() {
-  const [studentName, setStudentName] = useState("");
-  const [studentEmail, setStudentEmail] = useState("");
-  const [studentDepartment, setStudentDepartment] = useState("");
-  const [studentYear, setStudentYear] = useState("");
-  const [studentSection, setStudentSection] = useState("");
-  const [studentGender, setStudentGender] = useState("");
-  const [studentDob, setStudentDob] = useState("");
-  const [studentContactNumber, setStudentContactNumber] = useState("");
-  const [studentFatherName, setStudentFatherName] = useState("");
-  const [studentFatherContactNumber, setStudentFatherContactNumber] =
-    useState("");
-  const [studentAadharNumber, setStudentAadharNumber] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [department, setDepartment] = useState("");
+  const [year, setYear] = useState("");
+  const [section, setSection] = useState("");
+  const [gender, setGender] = useState("");
+  const [dob, setDob] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [fatherName, setFatherName] = useState("");
+  const [fatherContactNumber, setFatherContactNumber] = useState("");
+  const [aadharNumber, setAadharNumber] = useState("");
 
   const submitHandler = async (event) => {
     event.preventDefault();
     await axios
-      .post("http://localhost:4000/admin/addStudent", {
-        name: studentName,
-        email: studentEmail,
-        department: studentDepartment,
-        year: studentYear,
-        section: studentSection,
-        gender: studentGender,
-        dob: studentDob,
-        contactNumber: studentContactNumber,
-        fatherName: studentFatherName,
-        fatherContactNumber: studentFatherContactNumber,
-        aadharNumber: studentAadharNumber,
+      .post("http://localhost:4000/admin/add", {
+        name,
+        email,
+        department,
+        year,
+        section,
+        gender,
+        dob,
+        contactNumber,
+        fatherName,
+        fatherContactNumber,
+        aadharNumber,
       })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
@@ -58,25 +57,25 @@ function AddStudent() {
           <Box component="form" onSubmit={submitHandler} noValidate>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="studentName"
+                id="Name"
                 label="Name"
                 type="text"
                 variant="standard"
-                value={studentName}
+                value={name}
                 onChange={(e) => {
-                  setStudentName(e.target.value);
+                  setName(e.target.value);
                 }}
               />
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="studentEmail"
+                id="Email"
                 label="Email"
                 type="email"
                 variant="standard"
-                value={studentEmail}
+                value={email}
                 onChange={(e) => {
-                  setStudentEmail(e.target.value);
+                  setEmail(e.target.value);
                 }}
               />
             </FormControl>
@@ -84,11 +83,11 @@ function AddStudent() {
               <InputLabel id="demo-simple-select-label">Department</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
-                id="studentDept"
+                id="Dept"
                 label="Department"
-                value={studentDepartment}
+                value={department}
                 onChange={(e) => {
-                  setStudentDepartment(e.target.value);
+                  setDepartment(e.target.value);
                 }}
               >
                 <MenuItem value="CE">CIVIL ENGINEERING</MenuItem>
@@ -108,11 +107,11 @@ function AddStudent() {
               <InputLabel id="demo-simple-select-label">Year</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
-                id="studentYear"
+                id="Year"
                 label="Year"
-                value={studentYear}
+                value={year}
                 onChange={(e) => {
-                  setStudentYear(e.target.value);
+                  setYear(e.target.value);
                 }}
               >
                 <MenuItem value="first">1st</MenuItem>
@@ -125,11 +124,11 @@ function AddStudent() {
               <InputLabel id="demo-simple-select-label">Section</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
-                id="studentSection"
+                id="Section"
                 label="Section"
-                value={studentSection}
+                value={section}
                 onChange={(e) => {
-                  setStudentSection(e.target.value);
+                  setSection(e.target.value);
                 }}
               >
                 <MenuItem value="A">A</MenuItem>
@@ -146,9 +145,9 @@ function AddStudent() {
                 row
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
-                value={studentGender}
+                value={gender}
                 onChange={(e) => {
-                  setStudentGender(e.target.value);
+                  setGender(e.target.value);
                 }}
               >
                 <FormControlLabel
@@ -173,45 +172,45 @@ function AddStudent() {
                 Date of Birth
               </FormLabel>
               <TextField
-                id="studentDob"
+                id="Dob"
                 type="date"
-                value={studentDob}
-                onChange={(e) => setStudentDob(e.target.value)}
+                value={dob}
+                onChange={(e) => setDob(e.target.value)}
               />
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="studentContactNum"
+                id="ContactNum"
                 label="Contact Number"
                 type="number"
                 variant="standard"
-                value={studentContactNumber}
+                value={contactNumber}
                 onChange={(e) => {
-                  setStudentContactNumber(e.target.value);
+                  setContactNumber(e.target.value);
                 }}
               />
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="studentFatherName"
+                id="FatherName"
                 label="Father Name"
                 type="text"
                 variant="standard"
-                value={studentFatherName}
+                value={fatherName}
                 onChange={(e) => {
-                  setStudentFatherName(e.target.value);
+                  setFatherName(e.target.value);
                 }}
               />
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="studentFatherContactNum"
+                id="FatherContactNum"
                 label="Father Contact Number"
                 type="number"
                 variant="standard"
-                value={studentFatherContactNumber}
+                value={fatherContactNumber}
                 onChange={(e) => {
-                  setStudentFatherContactNumber(e.target.value);
+                  setFatherContactNumber(e.target.value);
                 }}
               />
             </FormControl>
@@ -221,8 +220,8 @@ function AddStudent() {
                 type="number"
                 label="Aadhar Card Number"
                 variant="standard"
-                value={studentAadharNumber}
-                onChange={(e) => setStudentAadharNumber(e.target.value)}
+                value={aadharNumber}
+                onChange={(e) => setAadharNumber(e.target.value)}
               />
             </FormControl>
 

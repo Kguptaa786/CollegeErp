@@ -123,7 +123,7 @@ module.exports = {
   //   }
   // },
 
-  addStudent: async (req, res, next) => {
+  addStudentFlag: async (req, res, next) => {
     try {
       const {
         name,

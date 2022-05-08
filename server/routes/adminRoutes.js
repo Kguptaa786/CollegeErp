@@ -1,20 +1,19 @@
 const express = require("express");
 const router = express.Router();
-<<<<<<< HEAD
-const { addStudent } = require("../controllers/admincontroller");
 
-router.post("/addStudent", addStudent);
-=======
+const { addStudentFlag } = require("../controllers/admincontroller");
+
+router.post("/addStudent", addStudentFlag);
+
 const passport = require("passport");
-const {
-  addStudent,
-  addAdmin,
-  adminLogin,
-  getAllStudent,
-  addFaculty,
-  getAllFaculty,
-} = require("../controllers/admincontroller");
->>>>>>> 1ea9b3b42c056d729faa5fbcfd71b11115eb5088
+// const {
+//   addStudentFlag,
+//   addAdmin,
+//   adminLogin,
+//   getAllStudent,
+//   addFaculty,
+//   getAllFaculty,
+// } = require("../controllers/admincontroller");
 
 router.post("/login", adminLogin);
 router.post("/addAdmin", addAdmin);
