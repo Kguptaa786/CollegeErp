@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { useNavigate, useNavigationType } from "react-router-dom";
 import axios from "axios";
 import {
   Grid,
@@ -17,6 +18,7 @@ import {
 import NavbarAdmin from "../../components/NavbarAdmin";
 
 function AddStudent() {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [department, setDepartment] = useState("");
@@ -32,7 +34,7 @@ function AddStudent() {
   const submitHandler = async (event) => {
     event.preventDefault();
     await axios
-      .post("http://localhost:4000/admin/add", {
+      .post("http://localhost:4000/admin/addStudent", {
         name,
         email,
         department,
@@ -45,7 +47,9 @@ function AddStudent() {
         fatherContactNumber,
         aadharNumber,
       })
-      .then((res) => console.log(res))
+      .then((res) => {
+        window.alert("Added successfully");
+      })
       .catch((err) => console.log(err));
   };
 

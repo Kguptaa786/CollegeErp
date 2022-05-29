@@ -1,12 +1,15 @@
-const mongoose=require('mongoose');
-mongoose.connect("mongodb://localhost:27017/collegeErp",
+const mongoose = require("mongoose");
+mongoose
+  .connect(
+    "mongodb://localhost:27017/collegeErpDatabase"
     // useCreateIndex:true,
     // useNewUrlParser:true,
     // useUnifiedTopology:true,
     // useFindAndModify : false}
-).then(()=>
-{
+  )
+  .then(() => {
     console.log("connection is successful");
-}).catch((e)=>{
+  })
+  .catch((e) => {
     console.log("no connection");
-}); 
+  });

@@ -6,47 +6,48 @@ const {
   facultyLogin,
   updatePassword,
   updateProfile,
-  markAttendence,
+  markAttendance,
+  markAttendanceHelper,
   uploadMarks,
+  uploadMarksHelper,
   forgotPassword,
   postOTP,
-} = require("../controller/facultyController");
+} = require("../controllers/facultycontroller");
 
-router.post("/login", facultyLogin);
+router.post("/faculty/markAttendance", markAttendance);
+router.post("/faculty/markAttendanceHelper", markAttendanceHelper);
+router.post("/faculty/uploadMarks", uploadMarks);
+router.post("/faculty/uploadMarksHelper", uploadMarksHelper);
 
-router.post("/updatePassword", updatePassword);
+// router.post("/facultyLogin", facultyLogin);
 
-router.post(
-  "/updateProfile",
-  passport.authenticate("jwt", { session: false }),
-  updateProfile
-);
+// router.post("/updatePassword", updatePassword);
 
-router.post(
-  "/markAttendence",
-  passport.authenticate("jwt", { session: false }),
-  markAttendence
-);
+// router.post(
+//   "/updateProfile",
+//   passport.authenticate("jwt", { session: false }),
+//   updateProfile
+// );
 
-router.post(
-  "/uploadMarks",
-  passport.authenticate("jwt", { session: false }),
-  uploadMarks
-);
+// router.post\(
+//   "/uploadMarks",
+//   passport.authenticate("jwt", { session: false }),
+//   uploadMarks
+// );
 
-router.post(
-  "/updateProfile",
-  passport.authenticate("jwt", { session: false }),
-  upload.single("avatar"),
-  updateProfile
-);
+// router.post(
+//   "/updateProfile",
+//   passport.authenticate("jwt", { session: false }),
+//   upload.single("avatar"),
+//   updateProfile
+// );
 
-router.post(
-  "/forgotPassword",
-  passport.authenticate("jwt", { session: false }),
-  forgotPassword
-);
+// router.post(
+//   "/forgotPassword",
+//   passport.authenticate("jwt", { session: false }),
+//   forgotPassword
+// );
 
-router.post("/postOTP", postOTP);
+// router.post("/postOTP", postOTP);
 
 module.exports = router;

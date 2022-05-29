@@ -1,4 +1,6 @@
 import React, { Fragment, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   Grid,
   Container,
@@ -10,34 +12,44 @@ import {
 } from "@mui/material";
 
 function AdminLogin(props) {
-  const [regNumber, setRegNumber] = useState("");
+  const navigate = useNavigate();
+  const [registrationNumber, setRegistrationNumber] = useState("");
   const [password, setPassword] = useState("");
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
-    console.log(regNumber);
+    await axios
+      .post("http://localhost:4000/adminLogin", {
+        registrationNumber,
+        password,
+      })
+      .then((res) => {
+        window.alert("Successfully Logged in...");
+        navigate("/admin");
+      })
+      .catch((err) => console.log(err));
   };
   return (
     <Fragment>
-      <Grid container justifyContent="center" alignContent="center">
-        <Grid item xs={12} md={4}>
+      <Grid container justifyContent="center">
+        <Grid>
           <Container>
             <Card>
               <form onSubmit={submitHandler}>
                 <Typography sx={{ m: 2 }} variant="h4">
                   Admin Login
                 </Typography>
-                <FormControl fullWidth sx={{ m: 2 }}>
+                <FormControl sx={{ m: 2 }}>
                   <TextField
-                    id="regNumber"
+                    id="registrationNumber"
                     label="Registration Number"
                     variant="outlined"
-                    value={regNumber}
+                    value={registrationNumber}
                     onChange={(e) => {
-                      setRegNumber(e.target.value);
+                      setRegistrationNumber(e.target.value);
                     }}
                   />
                 </FormControl>
-                <FormControl fullWidth sx={{ m: 2 }}>
+                <FormControl sx={{ m: 2 }}>
                   <TextField
                     id="password"
                     label="Password"
@@ -47,7 +59,6 @@ function AdminLogin(props) {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </FormControl>
-
                 <Button sx={{ m: 2 }} variant="contained" type="submit">
                   Log In
                 </Button>

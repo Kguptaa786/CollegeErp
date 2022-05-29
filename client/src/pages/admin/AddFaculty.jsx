@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import axios from "axios";
 import {
   Grid,
   TextField,
@@ -28,18 +29,31 @@ const useStyles = makeStyles({
 });
 
 function AddFaculty() {
-  const classes = useStyles();
-  const [facultyName, setFacultyName] = useState("");
-  const [facultyEmail, setFacultyEmail] = useState("");
-  const [facultyDepartment, setFacultyDepartment] = useState("");
-
-  const [facultyGender, setFacultyGender] = useState("");
-  const [facultyDob, setFacultyDob] = useState("");
-  const [facultyContactNumber, setFacultyContactNumber] = useState("");
-
-  const [facultyAadharNumber, setFacultyAadharNumber] = useState("");
-  const submitHandler = (event) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [department, setDepartment] = useState("");
+  const [gender, setGender] = useState("");
+  const [dob, setDob] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [aadharNumber, setAadharNumber] = useState("");
+  const submitHandler = async (event) => {
     event.preventDefault();
+    await axios
+      .post("http://localhost:4000/admin/addFaculty", {
+        name,
+        email,
+        department,
+        designation,
+        gender,
+        dob,
+        contactNumber,
+        aadharNumber,
+      })
+      .then((res) => {
+        window.alert("Added Succesfully");
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -53,9 +67,9 @@ function AddFaculty() {
                 id="standard-basic"
                 label="Name"
                 variant="standard"
-                value={facultyName}
+                value={name}
                 onChange={(e) => {
-                  setFacultyName(e.target.value);
+                  setName(e.target.value);
                 }}
               />
             </FormControl>
@@ -64,9 +78,9 @@ function AddFaculty() {
                 id="standard-basic"
                 label="Email"
                 variant="standard"
-                value={facultyEmail}
+                value={email}
                 onChange={(e) => {
-                  setFacultyEmail(e.target.value);
+                  setEmail(e.target.value);
                 }}
               />
             </FormControl>
@@ -76,9 +90,9 @@ function AddFaculty() {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Department"
-                value={facultyDepartment}
+                value={department}
                 onChange={(e) => {
-                  setFacultyDepartment(e.target.value);
+                  setDepartment(e.target.value);
                 }}
               >
                 <MenuItem value="CE">CIVIL ENGINEERING</MenuItem>
@@ -94,6 +108,23 @@ function AddFaculty() {
                 <MenuItem value="CHEM">CHEMICAL ENGINEERING</MenuItem>
               </Select>
             </FormControl>
+            <FormControl fullWidth sx={{ m: 2 }}>
+              <InputLabel id="demo-simple-select-label">Designation</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Designation"
+                value={designation}
+                onChange={(e) => {
+                  setDesignation(e.target.value);
+                }}
+              >
+                <MenuItem value="Assistant Professor">
+                  Assistant Professor
+                </MenuItem>
+                <MenuItem value="Professor">Professor</MenuItem>
+              </Select>
+            </FormControl>
 
             <FormControl sx={{ m: 2 }}>
               <FormLabel id="demo-row-radio-buttons-group-label">
@@ -103,9 +134,9 @@ function AddFaculty() {
                 row
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
-                value={facultyGender}
+                value={gender}
                 onChange={(e) => {
-                  setFacultyGender(e.target.value);
+                  setGender(e.target.value);
                 }}
               >
                 <FormControlLabel
@@ -132,8 +163,8 @@ function AddFaculty() {
               <TextField
                 id="date"
                 type="date"
-                value={facultyDob}
-                onChange={setFacultyDob}
+                value={dob}
+                onChange={(e) => setDob(e.target.value)}
               />
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
@@ -141,9 +172,9 @@ function AddFaculty() {
                 id="standard-basic"
                 label="Contact Number"
                 variant="standard"
-                value={facultyContactNumber}
+                value={contactNumber}
                 onChange={(e) => {
-                  setFacultyContactNumber(e.target.value);
+                  setContactNumber(e.target.value);
                 }}
               />
             </FormControl>
@@ -153,8 +184,8 @@ function AddFaculty() {
                 id="standard-basic"
                 label="Aadhar Card Number"
                 variant="standard"
-                value={facultyAadharNumber}
-                onChange={(e) => setFacultyAadharNumber(e.target.value)}
+                value={aadharNumber}
+                onChange={(e) => setAadharNumber(e.target.value)}
               />
             </FormControl>
             <Button

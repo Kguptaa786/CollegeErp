@@ -1,35 +1,31 @@
 const mongoose = require("mongoose");
 const adminSchema = new mongoose.Schema({
-  adminName: {
+  name: {
     type: String,
     required: true,
   },
-  adminEmail: {
+  email: {
     type: String,
     required: true,
-    unique: true,
   },
   password: {
     type: String,
     required: true,
   },
-  adminRegistrationNumber: {
-    type: Number,
-  },
-  adminJoiningYear: {
-    type: Number,
-    required: true,
-  },
-  adminDepartment: {
+  gender: {
     type: String,
-    required: true,
   },
-  adminContactNumber: {
+  registrationNumber: {
+    type: String,
+  },
+  joiningYear: {
     type: Number,
-    required: true,
-    unique: true,
-    maxlength: 10,
-    minlength: 10,
+  },
+  department: {
+    type: String,
+  },
+  contactNumber: {
+    type: Number,
   },
 });
 

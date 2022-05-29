@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import axios from "axios";
 import {
   Grid,
   TextField,
@@ -24,16 +25,33 @@ const useStyles = makeStyles({
   },
 });
 
-function AddStudent() {
+function AddSubject() {
   const classes = useStyles();
-  const [subjectName, setSubjectName] = useState("");
+  const [name, setName] = useState("");
   const [subjectCode, setSubjectCode] = useState("");
-  const [subjectDepartment, setSubjectDepartment] = useState("");
-  const [subjectTotalLecture, setSubjectTotalLecture] = useState("");
-  const [subjectYear, setSubjectYear] = useState("");
+  const [department, setDepartment] = useState("");
+  const [totalLectures, setTotalLectures] = useState("");
+  const [year, setYear] = useState("");
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
+    await axios
+      .post("http://localhost:4000/admin/addSubject", {
+        name,
+        subjectCode,
+        department,
+        totalLectures,
+        year,
+      })
+      .then((res) => {
+        window.alert("Added Successfully");
+      })
+      .catch((err) => console.log(err));
+    // setName("");
+    // setSubjectCode("");
+    // setDepartment("");
+    // setTotalLectures("");
+    // setYear("");
   };
 
   return (
@@ -45,19 +63,18 @@ function AddStudent() {
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
                 id="standard-basic"
-                label="Subject Name"
+                label=" Name"
                 variant="standard"
-                value={subjectName}
+                value={name}
                 onChange={(e) => {
-                  setSubjectName(e.target.value);
+                  setName(e.target.value);
                 }}
               />
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
                 id="standard-basic"
-                label="Subject Code"
-                type="number"
+                label=" Code"
                 variant="standard"
                 value={subjectCode}
                 onChange={(e) => {
@@ -71,9 +88,9 @@ function AddStudent() {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Department"
-                value={subjectDepartment}
+                value={department}
                 onChange={(e) => {
-                  setSubjectDepartment(e.target.value);
+                  setDepartment(e.target.value);
                 }}
               >
                 <MenuItem value="CE">CIVIL ENGINEERING</MenuItem>
@@ -97,20 +114,26 @@ function AddStudent() {
               <TextField
                 id="total-lecture"
                 type="number"
-                value={subjectTotalLecture}
-                onChange={setSubjectTotalLecture}
+                value={totalLectures}
+                onChange={(e) => setTotalLectures(e.target.value)}
               />
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
-              <TextField
-                id="standard-basic"
+              <InputLabel id="demo-simple-select-label">Year</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="Year"
                 label="Year"
-                variant="standard"
-                value={subjectYear}
+                value={year}
                 onChange={(e) => {
-                  setSubjectYear(e.target.value);
+                  setYear(e.target.value);
                 }}
-              />
+              >
+                <MenuItem value="first">1st</MenuItem>
+                <MenuItem value="second">2nd</MenuItem>
+                <MenuItem value="third">3rd</MenuItem>
+                <MenuItem value="fourth">4th</MenuItem>
+              </Select>
             </FormControl>
             <Button
               sx={{ m: 2 }}
@@ -127,4 +150,4 @@ function AddStudent() {
   );
 }
 
-export default AddStudent;
+export default AddSubject;

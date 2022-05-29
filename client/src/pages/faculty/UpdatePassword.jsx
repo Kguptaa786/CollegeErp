@@ -8,7 +8,7 @@ import {
   FormControl,
   Card,
 } from "@mui/material";
-
+import NavbarFaculty from "../../components/NavbarFaculty";
 function UpdatePassword(props) {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -18,6 +18,7 @@ function UpdatePassword(props) {
   };
   return (
     <Fragment>
+      <NavbarFaculty />
       <Grid container justifyContent="center" alignContent="center">
         <Grid item xs={12} md={4}>
           <Container>

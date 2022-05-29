@@ -1,111 +1,5 @@
-// import React from "react";
-// import { AppBar, Container, Toolbar, Typography } from "@mui/material";
-// import { NavLink } from "react-router-dom";
-// import { makeStyles } from "@mui/styles";
-
-// const useStyles = makeStyles({
-//   root: {},
-//   active: {
-//     textDecoration: "underline",
-//     color: "white",
-//     textTransform: "uppercase",
-//     marginBottom: "px",
-//   },
-//   inActive: {
-//     color: "white",
-//     textTransform: "uppercase",
-//     textDecoration: "none",
-//     margin: "8px",
-//   },
-// });
-
-// function NavbarAdmin() {
-//   const classes = useStyles();
-
-//   return (
-//     <AppBar position="absolute" className={}>
-//       <Toolbar>
-//         <Typography variant="h6" style={{ flexGrow: 1 }}>
-//           CollegeERP
-//         </Typography>
-//         <Typography>
-//           <NavLink
-//             to="../admin/addFaculty"
-//             className={(navData) =>
-//               navData.isActive ? classes.active : classes.inActive
-//             }
-//           >
-//             Add Faculty
-//           </NavLink>
-//         </Typography>
-//         <Typography>
-//           <NavLink
-//             to="../admin/addStudent"
-//             className={(navData) =>
-//               navData.isActive ? classes.active : classes.inActive
-//             }
-//           >
-//             Add Student
-//           </NavLink>
-//         </Typography>
-//         <Typography>
-//           <NavLink
-//             to="../admin/addSubject"
-//             className={(navData) =>
-//               navData.isActive ? classes.active : classes.inActive
-//             }
-//           >
-//             Add Subject
-//           </NavLink>
-//         </Typography>
-//         <Typography>
-//           <NavLink
-//             to="../admin/addAdmin"
-//             className={(navData) =>
-//               navData.isActive ? classes.active : classes.inActive
-//             }
-//           >
-//             Add Admin
-//           </NavLink>
-//         </Typography>
-//         <Typography>
-//           <NavLink
-//             to="../admin/ourFaculties"
-//             className={(navData) =>
-//               navData.isActive ? classes.active : classes.inActive
-//             }
-//           >
-//             Our Faculties
-//           </NavLink>
-//         </Typography>
-//         <Typography>
-//           <NavLink
-//             to="../admin/ourStudents"
-//             className={(navData) =>
-//               navData.isActive ? classes.active : classes.inActive
-//             }
-//           >
-//             Our Students
-//           </NavLink>
-//         </Typography>
-//         <Typography>
-//           <NavLink
-//             to="../admin/"
-//             className={(navData) =>
-//               navData.isActive ? classes.active : classes.inActive
-//             }
-//           >
-//             Logout
-//           </NavLink>
-//         </Typography>
-//       </Toolbar>
-//     </AppBar>
-//   );
-// }
-
-// export default NavbarAdmin;
-
 import * as React from "react";
+
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -114,23 +8,44 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
+
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useNavigate } from "react-router-dom";
-
+import { makeStyles } from "@mui/styles";
 const Links = [
-  { page: "Add Faculty", path: "/admin/addFaculty" },
-  { page: "Add Student", path: "/admin/addStudent" },
-  { page: "Add Subject", path: "/admin/addSubject" },
-  { page: "All Faculties", path: "/admin/allFaculties" },
-  { page: "All Students", path: "/admin/allStudents" },
-  { page: "All Subjects", path: "/admin/allSubjects" },
+  { keyVal: 1, page: "Add Faculty", path: "/admin/addFaculty" },
+  { keyVal: 2, page: "Add Student", path: "/admin/addStudent" },
+  { keyVal: 3, page: "Add Subject", path: "/admin/addSubject" },
+  { keyVal: 4, page: "Add Admin", path: "/admin/addAdmin" },
+  { keyVal: 5, page: "All Faculties", path: "/admin/allFaculties" },
+  { keyVal: 6, page: "All Students", path: "/admin/allStudents" },
+  { keyVal: 7, page: "All Subjects", path: "/admin/allSubjects" },
 ];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Logout"];
+
+const useStyles = makeStyles({
+  root: {
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    border: 0,
+    borderRadius: 3,
+    boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+    color: "white",
+    height: 48,
+    padding: "0 30px",
+  },
+  button: {
+    "&.active": {
+      textDecoration: "underline",
+    },
+  },
+});
 
 const ResponsiveAppBar = () => {
+  const classes = useStyles();
+
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   let router = useNavigate();
@@ -192,7 +107,7 @@ const ResponsiveAppBar = () => {
               }}
             >
               {Links.map((Link) => (
-                <MenuItem key={"1"} onClick={handleCloseNavMenu}>
+                <MenuItem key={Link.keyVal} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{Link.page}</Typography>
                 </MenuItem>
               ))}
@@ -209,7 +124,8 @@ const ResponsiveAppBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {Links.map((Link) => (
               <Button
-                key={"1"}
+                className={classes.button}
+                key={Link.keyVal}
                 onClick={() => {
                   router(Link.path);
                 }}

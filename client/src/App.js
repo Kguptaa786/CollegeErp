@@ -12,8 +12,9 @@ import FacultyStudentLoginPage from "./pages/FacultyStudentLoginPage";
 import MarkAttendance from "./pages/faculty/MarkAttendance";
 import UploadMarks from "./pages/faculty/UploadMarks";
 import UpdatePassword from "./pages/faculty/UpdatePassword";
+import FacultyProfile from "./pages/faculty/FacultyProfile";
 import AllSubjects from "./pages/admin/AllSubjects";
-import NavbarAdmin from "./components/NavbarAdmin";
+import StudentProfile from "./pages/student/StudentProfile";
 
 function App() {
   return (
@@ -30,9 +31,11 @@ function App() {
           <Route path="/admin/allFaculties" element={<AllFaculties />} />
           <Route path="/admin/allStudents" element={<AllStudents />} />
           <Route path="/admin/allSubjects" element={<AllSubjects />} />
+          <Route path="/faculty" element={<FacultyProfile />} />
           <Route path="/faculty/markAttendance" element={<MarkAttendance />} />
           <Route path="/faculty/uploadMarks" element={<UploadMarks />} />
           <Route path="/faculty/updatePassword" element={<UpdatePassword />} />
+          <Route path="/student" element={<StudentProfile />} />
         </Routes>
       </BrowserRouter>
     </>

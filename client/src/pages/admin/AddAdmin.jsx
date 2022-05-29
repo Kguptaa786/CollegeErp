@@ -1,4 +1,6 @@
 import React, { Fragment, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import {
   Grid,
   TextField,
@@ -13,8 +15,8 @@ import {
   RadioGroup,
 } from "@mui/material";
 import NavbarAdmin from "../../components/NavbarAdmin";
+import { Navigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
-import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -28,49 +30,65 @@ const useStyles = makeStyles({
   },
 });
 
-function AddStudent() {
-  const history = useNavigate();
-  console.log(history);
+function AddAdmin() {
+  const navigate = useNavigate();
   const classes = useStyles();
-  const [adminName, setAdminName] = useState("");
-  const [adminEmail, setAdminEmail] = useState("");
-  const [adminDepartment, setAdminDepartment] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [department, setDepartment] = useState("");
 
-  const [adminGender, setAdminGender] = useState("");
-  const [adminDob, setAdminDob] = useState("");
-  const [adminContactNumber, setAdminContactNumber] = useState("");
+  const [gender, setGender] = useState("");
+  const [dob, setDob] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
 
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
+    await axios
+      .post("http://localhost:4000/admin/addAdmin", {
+        name,
+        email,
+        department,
+        gender,
+        dob,
+        contactNumber,
+      })
+      .then((res) => {
+        window.alert("Added Successfully");
+      })
+      .catch((err) => console.log(err));
+    setName("");
+    setEmail("");
+    setDepartment("");
+    setGender("");
+    setDob("");
+    setContactNumber("");
   };
 
   return (
-    <Fragment>
+    <>
+      <NavbarAdmin />
       <Grid container alignItems="center" justifyContent="center">
-        <Grid item>
-          <NavbarAdmin />
-        </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid xs={12} md={6}>
           <form onSubmit={submitHandler} noValidate>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="standard-basic"
+                id="name"
                 label="Name"
                 variant="standard"
-                value={adminName}
+                value={name}
                 onChange={(e) => {
-                  setAdminName(e.target.value);
+                  setName(e.target.value);
                 }}
               />
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="standard-basic"
+                id="email"
                 label="Email"
                 variant="standard"
-                value={adminEmail}
+                value={email}
                 onChange={(e) => {
-                  setAdminEmail(e.target.value);
+                  setEmail(e.target.value);
                 }}
               />
             </FormControl>
@@ -80,9 +98,9 @@ function AddStudent() {
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Department"
-                value={adminDepartment}
+                value={department}
                 onChange={(e) => {
-                  setAdminDepartment(e.target.value);
+                  setDepartment(e.target.value);
                 }}
               >
                 <MenuItem value="CE">CIVIL ENGINEERING</MenuItem>
@@ -107,9 +125,9 @@ function AddStudent() {
                 row
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
-                value={adminGender}
+                value={gender}
                 onChange={(e) => {
-                  setAdminGender(e.target.value);
+                  setGender(e.target.value);
                 }}
               >
                 <FormControlLabel
@@ -134,20 +152,21 @@ function AddStudent() {
                 Date of Birth
               </FormLabel>
               <TextField
-                id="date"
+                id="dob"
                 type="date"
-                value={adminDob}
-                onChange={setAdminDob}
+                value={dob}
+                onChange={(e) => setDob(e.target.value)}
               />
             </FormControl>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
-                id="standard-basic"
+                id="contactNumber"
                 label="Contact Number"
+                type="number"
                 variant="standard"
-                value={adminContactNumber}
+                value={contactNumber}
                 onChange={(e) => {
-                  setAdminContactNumber(e.target.value);
+                  setContactNumber(e.target.value);
                 }}
               />
             </FormControl>
@@ -162,8 +181,8 @@ function AddStudent() {
           </form>
         </Grid>
       </Grid>
-    </Fragment>
+    </>
   );
 }
 
-export default AddStudent;
+export default AddAdmin;
