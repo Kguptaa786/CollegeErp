@@ -1,6 +1,6 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { NavigationType, useNavigate } from "react-router-dom";
 import {
   Grid,
   TextField,
@@ -36,10 +36,15 @@ function AddAdmin() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [department, setDepartment] = useState("");
-
   const [gender, setGender] = useState("");
   const [dob, setDob] = useState("");
   const [contactNumber, setContactNumber] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("adminToken") === null) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const submitHandler = async (event) => {
     event.preventDefault();

@@ -1,4 +1,5 @@
-import * as React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -13,12 +14,12 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 const Links = [
-  { keyVal: 1, page: "Mark Attendance", path: "/faculty/markAttendance" },
-  { keyVal: 2, page: "Upload Marks", path: "/faculty/uploadMarks" },
-  { keyVal: 3, page: "Update Password", path: "/faculty/updatePassword" },
+  { keyVal: 1, page: "Test Performance", path: "/student/testPerformance" },
+  { keyVal: 2, page: "Subject List", path: "/student/subjectList" },
+  { keyVal: 3, page: "Attendance Status", path: "/student/attendanceStatus" },
+  { keyVal: 4, page: "Students", path: "/student/students" },
 ];
 
 const useStyles = makeStyles({
@@ -39,11 +40,11 @@ const useStyles = makeStyles({
 });
 
 const ResponsiveAppBar = () => {
+  const navigate = useNavigate();
   const classes = useStyles();
 
-  const navigate = useNavigate();
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
   let router = useNavigate();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -59,13 +60,14 @@ const ResponsiveAppBar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
   const handleLogout = () => {
     localStorage.removeItem("studentToken");
     navigate("/");
   };
 
   const handleProfile = () => {
-    navigate("/faculty");
+    navigate("/student");
   };
 
   return (

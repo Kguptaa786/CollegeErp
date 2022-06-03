@@ -1,4 +1,5 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
+
 import axios from "axios";
 import {
   Grid,
@@ -16,11 +17,19 @@ import {
   TableCell,
 } from "@mui/material";
 import NavbarAdmin from "../../components/NavbarAdmin";
+import { useNavigate } from "react-router-dom";
 
 function AllSubjects() {
+  const navigate = useNavigate();
   const [department, setDepartment] = useState("");
   const [year, setYear] = useState("");
   const [subjects, setSubjects] = useState({});
+
+  useEffect(() => {
+    if (localStorage.getItem("adminToken") === null) {
+      navigate("/");
+    }
+  }, [navigate]);
   const submitHandler = async (event) => {
     event.preventDefault();
     await axios

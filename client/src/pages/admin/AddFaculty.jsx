@@ -1,4 +1,5 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Grid,
@@ -29,6 +30,7 @@ const useStyles = makeStyles({
 });
 
 function AddFaculty() {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [designation, setDesignation] = useState("");
@@ -37,6 +39,12 @@ function AddFaculty() {
   const [dob, setDob] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [aadharNumber, setAadharNumber] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("adminToken") === null) {
+      navigate("/");
+    }
+  }, [navigate]);
   const submitHandler = async (event) => {
     event.preventDefault();
     await axios

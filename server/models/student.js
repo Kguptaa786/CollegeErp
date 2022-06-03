@@ -14,6 +14,10 @@ const studentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  password: {
+    type: String,
+    required: true,
+  },
   dob: {
     type: String,
     required: true,
@@ -28,6 +32,10 @@ const studentSchema = new mongoose.Schema({
   },
   section: {
     type: String,
+    required: true,
+  },
+  avatar: {
+    type: String,
   },
   batch: {
     type: Number,
@@ -41,29 +49,13 @@ const studentSchema = new mongoose.Schema({
   aadharNumber: {
     type: Number,
   },
-  password: {
+  fatherName: {
     type: String,
-    required: true,
   },
-  tokens: [
-    {
-      token: {
-        type: String,
-      },
-    },
-  ],
+  fatherContactNumber: {
+    type: String,
+  },
 });
-
-studentSchema.methods.generateAuthToken = async function () {
-  try {
-    let token = jwt.sign({ _id: this._id }, process.env.SECRET_KEY);
-    this.tokens = this.tokens.concat({ token: token });
-    await this.save();
-    return token;
-  } catch (err) {
-    console.log(err);
-  }
-};
 
 const Student = new mongoose.model("Student", studentSchema);
 

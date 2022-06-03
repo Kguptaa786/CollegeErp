@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-
 const passport = require("passport");
+
 const {
   addStudent,
   addAdmin,
@@ -15,42 +15,46 @@ const {
 
 router.post("/adminLogin", adminLogin);
 
-router.post("/admin/addAdmin", addAdmin);
+router.post(
+  "/admin/addAdmin",
+  passport.authenticate("jwt", { session: false }),
+  addAdmin
+);
 
-router.post("/admin/addFaculty", addFaculty);
+router.post(
+  "/admin/addFaculty",
+  passport.authenticate("jwt", { session: false }),
+  addFaculty
+);
 
-router.post("/admin/addStudent", addStudent);
+router.post(
+  "/admin/addStudent",
+  passport.authenticate("jwt", { session: false }),
+  addStudent
+);
 
-router.post("/admin/addSubject", addSubject);
+router.post(
+  "/admin/addSubject",
+  passport.authenticate("jwt", { session: false }),
+  addSubject
+);
 
-router.post("/admin/allStudents", getAllStudent);
+router.post(
+  "/admin/allStudents",
+  passport.authenticate("jwt", { session: false }),
+  getAllStudent
+);
 
-router.post("/admin/allFaculties", getAllFaculty);
+router.post(
+  "/admin/allFaculties",
+  passport.authenticate("jwt", { session: false }),
+  getAllFaculty
+);
 
-router.post("/admin/allSubjects", getAllSubject);
+router.post(
+  "/admin/allSubjects",
+  passport.authenticate("jwt", { session: false }),
+  getAllSubject
+);
 
-// router.post("/admin/allFaculties", postAllFaculty);
-
-// router.post(
-//   "/getStudents",
-//   passport.authenticate("jwt", { session: false }),
-//   getStudents
-// );
-
-// router.post(
-//   "/addStudent",
-//   passport.authenticate("jwt", { session: false }),
-//   addStudent
-// );
-
-// router.post(
-//   "/getFaculty",
-//   passport.authenticate("jwt", { session: false }),
-//   addSubject
-// );
-// router.get(
-//   "/getSubjects",
-//   passport.authenticate("jwt", { session: false }),
-//   getAllSubjects
-// );
 module.exports = router;

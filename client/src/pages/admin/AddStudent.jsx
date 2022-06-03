@@ -1,5 +1,5 @@
-import React, { Fragment, useState } from "react";
-import { useNavigate, useNavigationType } from "react-router-dom";
+import React, { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Grid,
@@ -30,7 +30,11 @@ function AddStudent() {
   const [fatherName, setFatherName] = useState("");
   const [fatherContactNumber, setFatherContactNumber] = useState("");
   const [aadharNumber, setAadharNumber] = useState("");
-
+  useEffect(() => {
+    if (localStorage.getItem("adminToken") === null) {
+      navigate("/");
+    }
+  }, [navigate]);
   const submitHandler = async (event) => {
     event.preventDefault();
     await axios

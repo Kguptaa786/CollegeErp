@@ -31,28 +31,28 @@ function Dashboard(props) {
             image="../../public/images/main.jpg"
             alt="Krishna"
           />
-          <CardHeader title="Krishna Gupta" subheader="STU201903001" />
+          <CardHeader
+            title={props.data.name}
+            subheader={props.data.registrationNumber}
+          />
         </Card>
       </Box>
       <Box className={classes.child}>
         <Card sx={{ maxWidth: 345 }}>
           <CardContent>
-            <Typography variant="h6">Name</Typography>
+            <Typography variant="h6">{props.data.name}</Typography>
           </CardContent>
           <CardContent>
-            <Typography variant="h6">Email</Typography>
+            <Typography variant="h6">{props.data.email}</Typography>
           </CardContent>
           <CardContent>
-            <Typography variant="h6">Date of Birth</Typography>
+            <Typography variant="h6">{props.data.dob}</Typography>
           </CardContent>
           <CardContent>
-            <Typography variant="h6">Registration Number</Typography>
+            <Typography variant="h6">{props.data.department}</Typography>
           </CardContent>
           <CardContent>
-            <Typography variant="h6">Department</Typography>
-          </CardContent>
-          <CardContent>
-            <Typography variant="h6">Contact Number</Typography>
+            <Typography variant="h6">{props.data.contactNummber}</Typography>
           </CardContent>
         </Card>
       </Box>

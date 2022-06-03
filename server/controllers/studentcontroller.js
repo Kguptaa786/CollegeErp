@@ -1,146 +1,98 @@
 const Student = require("../models/student");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const Fake = require("../models/fake");
+
+const secretOrKey = process.env.SECRET_OR_KEY;
 
 module.exports = {
   studentLogin: async (req, res) => {
     try {
+      //validation needed
       const { registrationNumber, password } = req.body;
-      if (!registrationNumber || !password) {
-        return res.status(400).json({ error: "Please fill all credentials" });
-      }
+
       const student = await Student.findOne({ registrationNumber });
 
-      if (student) {
-        const isCorrect = await bcrypt.compareSync(password, student.password);
-        if (!isCorrect) {
-          return res.status(400).json({ error: "Invalid Credentials" });
-        } else {
-          const token = await student.generateAuthToken();
-          console.log(token);
-          // res.status(200).json({ message: "Successfully logged in" });
-          // res.cookie("jwttoken", token, {
-          //   expires: new Date(Date.now() + 25892000000),
-          //   httpOnly: true,
-          // });
-        }
-      } else {
-        return res.status(400).json({ error: "Invalid Credentials" });
+      if (!student) {
+        return res
+          .status(401)
+          .send({ success: false, message: "Invalid Credential" });
       }
+      const isCorrect = await bcrypt.compareSync(password, student.password);
+
+      if (!isCorrect) {
+        return res
+          .status(401)
+          .send({ success: false, message: "Invalid Credential" }); //validation needed
+      }
+
+      const payload = {
+        registrationNumber: student.registrationNumber,
+        id: student._id,
+        email: student.email,
+        dob: student.dob,
+        department: student.department,
+        name: student.name,
+        contactNumber: student.contactNumber,
+      };
+
+      const token = jwt.sign(payload, secretOrKey, { expiresIn: "1d" });
+      return res.status(200).send({
+        success: true,
+        message: "Successfully Logged in",
+        token: "Bearer " + token,
+      });
     } catch (err) {
       console.log(err);
+      return res.status(400).send(err);
     }
   },
-  // updateProfile:async(req,res,next)=>{
-  //     try{
-  //         const{registrationnumber,profilepicture,gender,contactnumber,aadharnumber}=req.data;
-  //         const student=await Student.findOne({registrationnumber});
-  //         if(gender)
-  //         {
-  //             student.studentGender=gender;
-  //             await student.save();
-  //         }
-  //         if(contactnumber)
-  //         {
-  //             student.facultyContactNumber=contactnumber;
-  //             await student.save();
-  //         }
-  //         if(aadharnumber)
-  //         {
-  //             student.studentAadharNumber=aadharnumber;
-  //             await student.save();
-  //         }
+  allStudents: async (req, res) => {
+    const { currRegistrationNumber, department, section, year } = req.body;
+    if (!department || !section || !year) {
+      return res
+        .status(400)
+        .send({ success: false, message: "All fields required" });
+    }
+    let students = await Student.find({ department, year, section });
+    if (!students) {
+      return res
+        .status(400)
+        .send({ success: false, message: "No student found" });
+    }
+    let filteredArr = students.filter(
+      (student) => student.registrationNumber !== currRegistrationNumber
+    );
+    students = filteredArr;
+    return res.status(200).send({
+      success: true,
+      message: "All Students are....",
+      students: students,
+    });
+  },
+  getStudentDetail: async (req, res) => {
+    const { registrationNumber } = req.params;
 
-  //         res.status(200).json({message:"updated successfully"});
-  //     }
-  //     catch{
-  //         console.log("error in updating profile");
-  //     }
-  // }
-  // updatePassword:async(req,res,next)=>{
-  //     try{
-  //        const {registrationnumber,oldpassword,newpassword,confirmNewPassword}=req.body;
-  //        if(!oldpassword||!newpassword||!confirmNewPassword)
-  //        {
-  //            res.status(400).json({message:"all feild are required"});
-  //        }
-  //        if(newpassword!==confirmNewPassword)
-  //        {
-  //            return res.status(400).json({message:"unequal both"})
-  //        }
-  //        const student=await Student.find({registrationnumber})
-  //        const isCorrect=await bcrypt.compare(oldpassword,student.password);
-  //        if(!isCorrect)
-  //        {
-  //            return res.status(400).json({message:"password not matching"})
-  //        }
-  //        const hashedpassword=await bcrypt.hash(newpassword,10);
-  //        student.password=hashedpassword;
-  //        await student.save()
-  //        res.status(200).json({message:'password updated' });
-
-  //     }catch(e){
-  //        console.log("errors in updating password")
-  //     }
-  // }
-  // forgetPassword:async(req,res,next)=>{
-  //     try{
-  //   const{email}=req.body;
-  //   const student=await Student.findOne({email:email});
-  //   if(!student)
-  //   {
-  //       res.status(400).json({message:"email not exist"});
-  //   }
-  //   function generateOtp(){
-  //       var digits='0123456789';
-  //       let otp='';
-  //       for(let i=0;i<6;i++)
-  //       {
-  //         otp += digits[Math.floor(Math.random() * 10)];
-  //       }
-  //   }
-  //   const OTP=await generateOtp();
-  //   student.otp=OTP;
-  //   await student.save();
-  //   student.sendEmail(student.email,OTP,"OTP");
-  //   res.status(200).json({message:"check your mail box for otp"});
-  //   const helper=async()=>{
-  //       student.otp="";
-  //       await student.save();
-  //   }
-  //   setTimeout(function(){
-  //       helper();
-
-  //   },300000);
-  // }catch(e){
-
-  // }
-  // }
-  // postOTP:async (req,res,next)=>{
-  //     try{
-  //       const{email,newpassword,confirmNewPassword,OTP}=req.body;
-  //       if(newpassword!==confirmNewPassword)
-  //       {
-  //           return res.status(400).json({message:"password not matching"})
-  //       }
-  //       const student=await Student.findOne({email:email});
-  //       if(OTP!==student.otp)
-  //       {
-  //       return res.status(400).json({message:"incorrect OTP"});
-  //       }
-  //       const hashPassword=await bcrypt.hash(newpassword,10);
-  //       student.password=hashPassword;
-  //       await student.save();
-  //       return res.status(200).json({ message: "Password Changed" })
-  //     }catch{
-
-  //     }
-  // }
-  // attendence:async(req,res,next)=>{
-  //     try{
-
-  //     }catch(e){
-
-  //     }
-  // }
+    if (!registrationNumber) {
+      return res
+        .status(400)
+        .send({ success: false, message: "Invalid credential" });
+    }
+    const student = await Student.findOne({ registrationNumber });
+    if (!student) {
+      return res
+        .status(400)
+        .send({ success: false, message: "No student found" });
+    }
+    return res
+      .status(200)
+      .send({ success: true, message: "Student found...", student: student });
+  },
+  saveCurrentMessage: async (req, res) => {
+    // console.log(req.body);
+  },
+  getMsg: async (req, res) => {
+    const msg = await Fake.find({ room: "STU202201002_STU202201001" });
+    return res.send({ msg });
+  },
 };

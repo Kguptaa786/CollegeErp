@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import {
   Grid,
@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import NavbarAdmin from "../../components/NavbarAdmin";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -26,12 +27,19 @@ const useStyles = makeStyles({
 });
 
 function AddSubject() {
+  const navigate = useNavigate();
   const classes = useStyles();
   const [name, setName] = useState("");
   const [subjectCode, setSubjectCode] = useState("");
   const [department, setDepartment] = useState("");
   const [totalLectures, setTotalLectures] = useState("");
   const [year, setYear] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("adminToken") === null) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const submitHandler = async (event) => {
     event.preventDefault();

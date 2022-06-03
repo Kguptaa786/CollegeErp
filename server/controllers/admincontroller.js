@@ -1,8 +1,12 @@
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const jwt_decode = require("jwt-decode");
 const Admin = require("../models/admin");
 const Student = require("../models/student");
 const Faculty = require("../models/faculty");
 const Subject = require("../models/subject");
+
+const secretOrKey = process.env.SECRET_OR_KEY;
 
 module.exports = {
   adminLogin: async (req, res) => {
@@ -13,29 +17,57 @@ module.exports = {
       const admin = await Admin.findOne({ registrationNumber });
 
       if (!admin) {
-        return res.status(400).json({ message: "No user available" });
+        return res
+          .status(401)
+          .send({ success: false, message: "Invalid Credential" });
       }
       const isCorrect = await bcrypt.compareSync(password, admin.password);
 
       if (!isCorrect) {
-        return res.status(404).json({ message: "Invalid Credential" }); //validation needed
+        return res
+          .status(401)
+          .send({ success: false, message: "Invalid Credential" }); //validation needed
       }
-      return res.status(200).json({ message: "Successfully Logged in.." });
+
+      const payload = {
+        registrationNumber: admin.registrationNumber,
+        id: admin._id,
+        email: admin.email,
+        dob: admin.dob,
+        department: admin.department,
+        name: admin.name,
+        contactNumber: admin.contactNumber,
+      };
+
+      const token = jwt.sign(payload, secretOrKey, { expiresIn: "1d" });
+      return res.status(200).send({
+        success: true,
+        message: "Successfully Logged in",
+        token: "Bearer " + token,
+      });
     } catch (err) {
-      console.log("Error in admin login", err.message);
+      console.log(err);
+      return res.status(400).send(err);
     }
   },
   addAdmin: async (req, res, next) => {
     try {
       const { name, dob, email, gender, contactNumber, department } = req.body;
+
       if (!name || !dob || !email || !department) {
-        res.status(400).json({ message: "some data fields are empty" });
+        return res
+          .status(401)
+          .send({ success: false, message: "Some data fields are empty" });
       }
 
       const if_already_present = await Admin.findOne({ email });
+
       if (if_already_present) {
-        return res.staus(400).json({ message: "email already existing" });
+        return res
+          .staus(400)
+          .send({ success: false, message: "Email already existing" });
       }
+
       //regisration number generating
 
       let departmentHelper;
@@ -78,6 +110,7 @@ module.exports = {
         name,
         email,
         gender,
+        dob,
         registrationNumber: registrationNumber,
         joiningYear,
         department,
@@ -85,10 +118,12 @@ module.exports = {
         password: hashedPassword,
       });
       await newAdmin.save();
-      res.status(200).json({ message: "Added Successfully" });
-    } catch (e) {
-      console.log(e);
-      res.status(400).send(e);
+      res
+        .status(200)
+        .send({ success: true, message: "Admin added successfully" });
+    } catch (err) {
+      console.log(err);
+      res.status(400).send(err);
     }
   },
 
@@ -156,7 +191,7 @@ module.exports = {
         aadharNumber,
       });
       await newStudent.save();
-      res.json({ data: newStudent });
+      res.send({ data: newStudent });
     } catch (e) {
       console.log(e);
       res.status(400).send(e);
@@ -169,7 +204,7 @@ module.exports = {
 
       const code = await Subject.findOne({ subjectCode });
       if (code) {
-        return res.status(404).json({ message: "already present" });
+        return res.status(404).send({ message: "already present" });
       }
 
       const newSubject = await new Subject({
@@ -180,7 +215,7 @@ module.exports = {
         year,
       });
       await newSubject.save();
-      res.json({ data: newSubject });
+      res.send({ data: newSubject });
     } catch (e) {
       console.log(e);
     }
@@ -253,22 +288,23 @@ module.exports = {
         aadharNumber,
       });
       await newFaculty.save();
-      res.json({ data: newFaculty });
+      res.send({ data: newFaculty });
     } catch (e) {
       res.status(400);
     }
   },
 
-  getAllStudent: async (req, res, next) => {
+  getAllStudent: async (req, res) => {
     try {
       const { department, year } = req.body;
       const students = await Student.find({ department, year });
+      console.log(students);
       if (students.length === 0) {
-        return res.status(404).json({ message: "No students found" });
+        return res.status(404).send({ message: "No students found" });
       }
-      res.status(200).json({ data: students });
+      return res.status(200).send({ students: students });
     } catch (e) {
-      res.status(400).json({ message: "not found" });
+      return res.status(400).send({ message: "not found" });
     }
   },
 
@@ -278,9 +314,9 @@ module.exports = {
       const faculties = await Faculty.find({ department });
 
       if (faculties.length === 0) {
-        return res.status(404).json({ message: "No Record Found" });
+        return res.status(404).send({ message: "No Record Found" });
       }
-      res.status(200).json({ data: faculties });
+      res.status(200).send({ data: faculties });
     } catch (err) {
       console.log(err);
     }
@@ -291,50 +327,11 @@ module.exports = {
       const { department, year } = req.body;
       const subjects = await Subject.find({ department, year });
       if (subjects.length === 0) {
-        res.status(404).json({ error: "no subject found" });
+        res.status(404).send({ error: "no subject found" });
       }
-      res.status(200).json({ data: subjects });
+      res.status(200).send({ data: subjects });
     } catch (e) {
-      res.status(400).json({ error: "Something went wrong" });
+      res.status(400).send({ error: "Something went wrong" });
     }
   },
-
-  // getStudents: async (req, res, next) => {
-  //   try {
-  //     const { department, year } = req.body;
-  //     const students = await Student.find({ department, year });
-  //     if (students.length === 0) {
-  //       return res.status(404).json({ message: "No students found" });
-  //     }
-  //     res.status(200).json({ result: students });
-  //   } catch (e) {
-  //     res.status(400).json({ message: "not found" });
-  //   }
-  // },
-
-  // postAllFaculty:async(req,res,next)=>{
-  //   try{
-
-  //   }
-  // }
-
-  // getFaculty: async (req, res, next) => {
-  //   try {
-  //     const { department } = req.body;
-  //     const allfaculties = await Faculty.find({ department });
-  //     res.status(200).json({ result: allfaculties });
-  //   } catch (e) {
-  //     res.status(200);
-  //   }
-  // },
-
-  // getAllSubjects: async (req, res, next) => {
-  //   try {
-  //     const { department, year } = req.body;
-  //     const allSubjects = await Subject.find({ department, year });
-  //     res.status(200).json({ result: allSubjects });
-  //   } catch (err) {
-  //     console.log("Error in gettting all students", err.message);
-  //   }
-  // },
 };

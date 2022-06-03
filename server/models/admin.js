@@ -12,6 +12,12 @@ const adminSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  dob: {
+    type: String,
+  },
+  avatar: {
+    type: String,
+  },
   gender: {
     type: String,
   },

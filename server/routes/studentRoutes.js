@@ -4,15 +4,27 @@ const router = express.Router();
 
 const {
   studentLogin,
+  allStudents,
   forgetPassword,
   postOTP,
   updateProfile,
   updatePassword,
   getMarks,
   getAllSubjects,
+  getStudentDetail,
+  saveCurrentMessage,
+  getMsg,
 } = require("../controllers/studentcontroller");
 
 router.post("/", studentLogin);
+
+router.post("/student/students", allStudents);
+
+router.get("/student/:registrationNumber", getStudentDetail);
+
+router.get("/getMsg", getMsg);
+
+// router.post("/student/students/saveCurrentMessage", saveCurrentMessage);
 
 // router.post("/forgotPassword", forgotPassword);
 

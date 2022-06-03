@@ -8,6 +8,10 @@ const markSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "subject",
   },
+  exam: {
+    type: String,
+    required: true,
+  },
   department: {
     type: String,
   },
@@ -17,9 +21,7 @@ const markSchema = new mongoose.Schema({
   section: {
     type: String,
   },
-  exam: {
-    type: String,
-  },
+
   mark: {
     type: Number,
     default: 0,

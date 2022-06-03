@@ -1,5 +1,5 @@
-import * as React from "react";
-
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,7 +13,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@mui/styles";
 const Links = [
   { keyVal: 1, page: "Add Faculty", path: "/admin/addFaculty" },
@@ -24,7 +23,6 @@ const Links = [
   { keyVal: 6, page: "All Students", path: "/admin/allStudents" },
   { keyVal: 7, page: "All Subjects", path: "/admin/allSubjects" },
 ];
-const settings = ["Profile", "Logout"];
 
 const useStyles = makeStyles({
   root: {
@@ -45,10 +43,9 @@ const useStyles = makeStyles({
 
 const ResponsiveAppBar = () => {
   const classes = useStyles();
-
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  let router = useNavigate();
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  let navigate = useNavigate();
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -62,6 +59,15 @@ const ResponsiveAppBar = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("adminToken");
+    navigate("/");
+  };
+
+  const handleProfile = () => {
+    navigate("/admin");
   };
 
   return (
@@ -127,7 +133,7 @@ const ResponsiveAppBar = () => {
                 className={classes.button}
                 key={Link.keyVal}
                 onClick={() => {
-                  router(Link.path);
+                  navigate(Link.path);
                 }}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
@@ -158,11 +164,16 @@ const ResponsiveAppBar = () => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography textAlign="center" onClick={handleProfile}>
+                  Profile
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography textAlign="center" onClick={handleLogout}>
+                  Logout
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

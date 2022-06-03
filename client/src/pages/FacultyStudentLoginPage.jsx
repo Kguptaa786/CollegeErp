@@ -3,7 +3,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
   Grid,
-  Typography,
   Container,
   Card,
   FormControl,
@@ -42,21 +41,38 @@ function FacultyStudentLoginPage(props) {
         registrationNumber: studentRegNumber,
         password: studentPassword,
       })
-      .then((res) => {
-        console.log(res);
+      .then((student) => {
+        localStorage.setItem("studentToken", student.data.token);
+        window.alert("Successfully Logged in...");
         navigate("/student");
-        // if (res.status === 400 || !data) {
-        //   navigate("/");
-        //   window.alert("Invalid Credentials");
-        // } else {
-        //   navigate("/student");
-        //   window.alert("Successfully logged in");
-        // }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        window.alert("Invalid credential");
+        navigate("/");
+      });
+    setStudentRegNumber("");
+    setStudentPassword("");
   };
-  const facultySubmitHandler = (event) => {
+  const facultySubmitHandler = async (event) => {
     event.preventDefault();
+    await axios
+      .post("http://localhost:4000/", {
+        registrationNumber: facultyRegNumber,
+        password: facultyPassword,
+      })
+      .then((faculty) => {
+        localStorage.setItem("adminToken", faculty.data.token);
+        window.alert("Successfully Logged in...");
+        navigate("/faculty");
+      })
+      .catch((err) => {
+        console.log(err);
+        window.alert("Invalid credential");
+        navigate("/");
+      });
+    setFacultyRegNumber("");
+    setFacultyPassword("");
   };
   return (
     <>
@@ -68,9 +84,6 @@ function FacultyStudentLoginPage(props) {
                 <Card>
                   <h2>Student Login</h2>
                   <form onSubmit={studentSubmitHandler}>
-                    <Typography sx={{ m: 2 }} variant="h4">
-                      {props.typeName}
-                    </Typography>
                     <FormControl fullWidth sx={{ m: 2 }}>
                       <TextField
                         id="studRegNumber"
@@ -105,9 +118,6 @@ function FacultyStudentLoginPage(props) {
                 <Card>
                   <h2>Faculty Login</h2>
                   <form onSubmit={facultySubmitHandler}>
-                    <Typography sx={{ m: 2 }} variant="h4">
-                      {props.typeName}
-                    </Typography>
                     <FormControl fullWidth sx={{ m: 2 }}>
                       <TextField
                         id="facRegNumber"

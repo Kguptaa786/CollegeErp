@@ -15,6 +15,9 @@ import UpdatePassword from "./pages/faculty/UpdatePassword";
 import FacultyProfile from "./pages/faculty/FacultyProfile";
 import AllSubjects from "./pages/admin/AllSubjects";
 import StudentProfile from "./pages/student/StudentProfile";
+import Students from "./pages/student/Students";
+import PeerStudent from "./pages/student/PeerStudent";
+import ChatPage from "./pages/student/ChatPage";
 
 function App() {
   return (
@@ -36,6 +39,12 @@ function App() {
           <Route path="/faculty/uploadMarks" element={<UploadMarks />} />
           <Route path="/faculty/updatePassword" element={<UpdatePassword />} />
           <Route path="/student" element={<StudentProfile />} />
+          <Route
+            path="/student/:registrationNumber"
+            element={<PeerStudent />}
+          />
+          <Route path="/student/students" element={<Students />} />
+          <Route path="/student/chat/:room" element={<ChatPage />} />
         </Routes>
       </BrowserRouter>
     </>

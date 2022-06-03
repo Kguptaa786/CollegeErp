@@ -1,4 +1,5 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
   Grid,
@@ -37,9 +38,16 @@ const useStyles = makeStyles({
 });
 
 function AllFaculties() {
+  const navigate = useNavigate();
   const classes = useStyles();
   const [department, setDepartment] = useState("");
   const [faculties, setFaculties] = useState({});
+
+  useEffect(() => {
+    if (localStorage.getItem("adminToken") === null) {
+      navigate("/");
+    }
+  }, [navigate]);
   const submitHandler = async (event) => {
     event.preventDefault();
     await axios

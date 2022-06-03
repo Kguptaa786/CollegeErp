@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 import {
   Grid,
   FormControl,
@@ -16,26 +17,33 @@ import {
   TableRow,
   TableCell,
 } from "@mui/material";
-import NavbarAdmin from "../../components/NavbarAdmin";
+import NavbarStudent from "../../components/NavbarStudent";
 
-function AllStudents() {
+function Students() {
   const navigate = useNavigate();
   const [department, setDepartment] = useState("");
   const [year, setYear] = useState("");
+  const [currRegistrationNumber, setCurrRegistrationNumber] = useState("");
+  const [section, setSection] = useState("");
   const [students, setStudents] = useState({});
 
   useEffect(() => {
-    if (localStorage.getItem("adminToken") === null) {
+    if (localStorage.getItem("studentToken") === null) {
       navigate("/");
     }
+    setCurrRegistrationNumber(
+      jwt_decode(localStorage.getItem("studentToken")).registrationNumber
+    );
   }, [navigate]);
 
   const submitHandler = async (event) => {
     event.preventDefault();
     await axios
-      .post("http://localhost:4000/admin/allStudents", {
+      .post("http://localhost:4000/student/students", {
+        currRegistrationNumber,
         department,
         year,
+        section,
       })
       .then((res) => {
         console.log(res.data.students);
@@ -50,7 +58,7 @@ function AllStudents() {
   };
   return (
     <Fragment>
-      <NavbarAdmin />
+      <NavbarStudent />
       <Grid container alignItems="center" justifyContent="center">
         {!students.length && (
           <Grid item xs={12} md={6}>
@@ -100,6 +108,22 @@ function AllStudents() {
                   <MenuItem value="fourth">4th</MenuItem>
                 </Select>
               </FormControl>
+              <FormControl fullWidth sx={{ m: 2 }}>
+                <InputLabel id="demo-simple-select-label">Section</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="Section"
+                  label="Section"
+                  value={section}
+                  onChange={(e) => {
+                    setSection(e.target.value);
+                  }}
+                >
+                  <MenuItem value="A">A</MenuItem>
+                  <MenuItem value="B">B</MenuItem>
+                  <MenuItem value="C">C</MenuItem>
+                </Select>
+              </FormControl>
               <Button
                 sx={{ m: 2 }}
                 variant="contained"
@@ -120,8 +144,7 @@ function AllStudents() {
                     <TableCell>S.No</TableCell>
                     <TableCell align="center">Registration Number</TableCell>
                     <TableCell align="center">Name</TableCell>
-                    <TableCell align="center">Email</TableCell>
-                    <TableCell align="center">Section</TableCell>
+                    <TableCell align="center">Chat</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -137,8 +160,11 @@ function AllStudents() {
                         {student.registrationNumber}
                       </TableCell>
                       <TableCell align="center">{student.name}</TableCell>
-                      <TableCell align="center">{student.email}</TableCell>
-                      <TableCell align="center">{student.section}</TableCell>
+                      <TableCell align="center">
+                        <Link to={`/student/${student.registrationNumber}`}>
+                          Explore
+                        </Link>{" "}
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -151,4 +177,4 @@ function AllStudents() {
   );
 }
 
-export default AllStudents;
+export default Students;

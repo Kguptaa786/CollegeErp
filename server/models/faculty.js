@@ -8,8 +8,19 @@ const facultySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  avatar: {
+    type: String,
+  },
   password: {
     type: String,
+    required: true,
+  },
+  department: {
+    type: String,
+    required: true,
+  },
+  joiningYear: {
+    type: Number,
     required: true,
   },
   designation: {
@@ -18,12 +29,7 @@ const facultySchema = new mongoose.Schema({
   registrationNumber: {
     type: String,
   },
-  joiningYear: {
-    type: Number,
-  },
-  department: {
-    type: String,
-  },
+
   dob: {
     type: String,
   },

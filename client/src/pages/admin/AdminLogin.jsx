@@ -22,11 +22,18 @@ function AdminLogin(props) {
         registrationNumber,
         password,
       })
-      .then((res) => {
+      .then((admin) => {
+        localStorage.setItem("adminToken", admin.data.token);
         window.alert("Successfully Logged in...");
         navigate("/admin");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        window.alert("Invalid credential");
+        navigate("/adminLogin");
+      });
+    setRegistrationNumber("");
+    setPassword("");
   };
   return (
     <Fragment>
