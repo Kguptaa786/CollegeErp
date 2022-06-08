@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import io from "socket.io-client";
 import { useParams, useNavigate } from "react-router-dom";
-import { Grid, Box, TextField, FormControl } from "@mui/material";
+import { Grid, Box } from "@mui/material";
 import NavbarStudent from "../../components/NavbarStudent";
 import ReactScrollToBottom from "react-scroll-to-bottom";
 import "./ChatPage.css";
@@ -11,6 +11,7 @@ import Message from "./ChatPageHelper/Message";
 const ENDPOINT = "http://localhost:4000";
 let socket;
 function ChatPage() {
+  const navigate = useNavigate();
   const params = useParams();
   const [room1, setRoom1] = useState("");
   const [room2, setRoom2] = useState("");
@@ -21,6 +22,12 @@ function ChatPage() {
   const [message, setMessage] = useState("");
   const [messageArray, setMessageArray] = useState([]);
   const [olderMessages, setOlderMessages] = useState([]);
+
+  useEffect(() => {
+    if (localStorage.getItem("studentToken") === null) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     let temp = params.room;
@@ -50,6 +57,7 @@ function ChatPage() {
     //   socket.off();
     // };
   }, [room1, room2, messageArray]);
+
   // useEffect(() => {
   //   axios
   //     .post("http://localhost:4000/student/students/getOlderMessage", {
@@ -61,6 +69,7 @@ function ChatPage() {
   //     })
   //     .catch((e) => console.log(e));
   // });
+
   useEffect(() => {
     axios.get("http://localhost:4000/getMsg").then((res) => {
       setOlderMessages(res.data.msg).catch((e) => console.log(e));

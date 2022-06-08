@@ -5,60 +5,45 @@ const router = express.Router();
 const {
   studentLogin,
   allStudents,
-  forgetPassword,
-  postOTP,
-  updateProfile,
-  updatePassword,
-  getMarks,
-  getAllSubjects,
   getStudentDetail,
-  saveCurrentMessage,
+  attendanceStatus,
   getMsg,
+  subjectList,
+  testPerformance,
 } = require("../controllers/studentcontroller");
 
 router.post("/", studentLogin);
 
-router.post("/student/students", allStudents);
+router.post(
+  "/student/students",
+  passport.authenticate("jwt", { session: false }),
+  allStudents
+);
 
-router.get("/student/:registrationNumber", getStudentDetail);
+router.get(
+  "/student/subjectList",
+  passport.authenticate("jwt", { session: false }),
+  subjectList
+);
+
+router.get(
+  "/student/attendanceStatus",
+  passport.authenticate("jwt", { session: false }),
+  attendanceStatus
+);
+
+router.get(
+  "student/testPerformace",
+  passport.authenticate("jwt", { session: false }),
+  testPerformance
+);
+
+router.get(
+  "/student/:registrationNumber",
+  passport.authenticate("jwt", { session: false }),
+  getStudentDetail
+);
 
 router.get("/getMsg", getMsg);
-
-// router.post("/student/students/saveCurrentMessage", saveCurrentMessage);
-
-// router.post("/forgotPassword", forgotPassword);
-
-// router.post("/postOTP", postOTP);
-
-// router.post(
-//   "/updateProfile",
-//   passport.authenticate("jwt", { session: false }),
-//   upload.single("avatar"),
-//   updateProfile
-// );
-
-// router.post(
-//   "/updatePassword",
-//   passport.authenticate("jwt", { session: false }),
-//   updatePassword
-// );
-
-// router.get(
-//   "/getMarks",
-//   passport.authenticate("jwt", { session: false }),
-//   getMarks
-// );
-
-// router.get(
-//   "/getAllSubjects",
-//   passport.authenticate("jwt", { session: false }),
-//   getAllSubjects
-// );
-
-// router.get(
-//   "/checkAttendence",
-//   passport.authenticate("jwt", { session: false }),
-//   checkAttendence
-// );
 
 module.exports = router;

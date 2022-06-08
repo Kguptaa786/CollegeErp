@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
-import { NavigationType, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Grid,
   TextField,
@@ -15,7 +15,7 @@ import {
   RadioGroup,
 } from "@mui/material";
 import NavbarAdmin from "../../components/NavbarAdmin";
-import { Navigate } from "react-router-dom";
+
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles({
@@ -48,6 +48,7 @@ function AddAdmin() {
 
   const submitHandler = async (event) => {
     event.preventDefault();
+    console.log("skjbfvksj");
     await axios
       .post("http://localhost:4000/admin/addAdmin", {
         name,
@@ -61,12 +62,12 @@ function AddAdmin() {
         window.alert("Added Successfully");
       })
       .catch((err) => console.log(err));
-    setName("");
-    setEmail("");
-    setDepartment("");
-    setGender("");
-    setDob("");
-    setContactNumber("");
+    // setName("");
+    // setEmail("");
+    // setDepartment("");
+    // setGender("");
+    // setDob("");
+    // setContactNumber("");
   };
 
   return (

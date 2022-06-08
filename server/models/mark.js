@@ -21,7 +21,6 @@ const markSchema = new mongoose.Schema({
   section: {
     type: String,
   },
-
   mark: {
     type: Number,
     default: 0,

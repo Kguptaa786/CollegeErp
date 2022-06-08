@@ -18,6 +18,8 @@ import StudentProfile from "./pages/student/StudentProfile";
 import Students from "./pages/student/Students";
 import PeerStudent from "./pages/student/PeerStudent";
 import ChatPage from "./pages/student/ChatPage";
+import SubjectList from "./pages/student/SubjectList";
+import AttendanceStatus from "./pages/student/AttendanceStatus";
 
 function App() {
   return (
@@ -44,6 +46,11 @@ function App() {
             element={<PeerStudent />}
           />
           <Route path="/student/students" element={<Students />} />
+          <Route path="/student/subjectList" element={<SubjectList />} />
+          <Route
+            path="/student/attendanceStatus"
+            element={<AttendanceStatus />}
+          />
           <Route path="/student/chat/:room" element={<ChatPage />} />
         </Routes>
       </BrowserRouter>

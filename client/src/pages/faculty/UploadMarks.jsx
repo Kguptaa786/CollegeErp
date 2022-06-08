@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -30,6 +30,12 @@ function MarkAttendance() {
   const [students, setStudents] = useState({});
   const [allSubjectCode, setAllSubjectCode] = useState({});
   const [marks, setMarks] = useState([]);
+
+  useEffect(() => {
+    if (localStorage.getItem("facultyToken") === null) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const markChangeHandler = (value, _id) => {
     const newMarks = [...marks];

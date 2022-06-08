@@ -1,5 +1,7 @@
 const passport = require("passport");
 const Admin = require("../models/admin");
+const Student = require("../models/student");
+const Faculty = require("../models/faculty");
 const JwtStrategy = require("passport-jwt").Strategy,
   ExtractJwt = require("passport-jwt").ExtractJwt;
 const opts = {};

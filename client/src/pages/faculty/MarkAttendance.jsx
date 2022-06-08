@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import {
   Grid,
@@ -28,6 +28,12 @@ function MarkAttendance() {
   const [students, setStudents] = useState({});
   const [allSubjectCode, setAllSubjectCode] = useState({});
   const [checkedValue, setCheckedValue] = useState([]);
+
+  useEffect(() => {
+    if (localStorage.getItem("facultyToken") === null) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const checkChangeHandler = (event) => {
     const temp = checkedValue;

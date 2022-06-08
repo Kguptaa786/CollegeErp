@@ -16,12 +16,28 @@ const {
 
 router.post("/", facultyLogin);
 
-router.post("/faculty/markAttendance", markAttendance);
+router.post(
+  "/faculty/markAttendance",
+  passport.authenticate("jwt", { session: false }),
+  markAttendance
+);
 
-router.post("/faculty/markAttendanceHelper", markAttendanceHelper);
+router.post(
+  "/faculty/markAttendanceHelper",
+  passport.authenticate("jwt", { session: false }),
+  markAttendanceHelper
+);
 
-router.post("/faculty/uploadMarks", uploadMarks);
+router.post(
+  "/faculty/uploadMarks",
+  passport.authenticate("jwt", { session: false }),
+  uploadMarks
+);
 
-router.post("/faculty/uploadMarksHelper", uploadMarksHelper);
+router.post(
+  "/faculty/uploadMarksHelper",
+  passport.authenticate("jwt", { session: false }),
+  uploadMarksHelper
+);
 
 module.exports = router;

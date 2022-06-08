@@ -62,13 +62,21 @@ function AddFaculty() {
         window.alert("Added Succesfully");
       })
       .catch((err) => console.log(err));
+    // setName("");
+    // setEmail("");
+    // setDesignation("");
+    // setGender("");
+    // setDob("");
+    // setContactNumber("");
+    // setAadharNumber("");
+    // setDepartment("");
   };
 
   return (
     <>
       <NavbarAdmin />
       <Grid container alignItems="center" justifyContent="center">
-        <Grid xs={12} md={6}>
+        <Grid item xs={12} md={6}>
           <form onSubmit={submitHandler}>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
@@ -180,6 +188,7 @@ function AddFaculty() {
                 id="standard-basic"
                 label="Contact Number"
                 variant="standard"
+                type="number"
                 value={contactNumber}
                 onChange={(e) => {
                   setContactNumber(e.target.value);
@@ -191,6 +200,7 @@ function AddFaculty() {
               <TextField
                 id="standard-basic"
                 label="Aadhar Card Number"
+                type="number"
                 variant="standard"
                 value={aadharNumber}
                 onChange={(e) => setAadharNumber(e.target.value)}

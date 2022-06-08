@@ -109,24 +109,36 @@ function AllSubjects() {
         )}
         {subjects.length && (
           <Grid item xs={12} md={8}>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ mt: 2 }}>
               <Table sx={{ minWidth: 500 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell align="right">Subject Code</TableCell>
-                    <TableCell align="right">Name</TableCell>
-                    <TableCell align="right">Total Lecture</TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      S.No
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      Subject Code
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      Name
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      Total Lecture
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {subjects.map((subject) => (
+                  {subjects.map((subject, index) => (
                     <TableRow
-                      key={subject._id}
+                      key={index}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell align="right">{subject.subjectCode}</TableCell>
-                      <TableCell align="right">{subject.name}</TableCell>
-                      <TableCell align="right">
+                      <TableCell align="center">{index + 1}</TableCell>
+                      <TableCell align="center">
+                        {subject.subjectCode}
+                      </TableCell>
+                      <TableCell align="center">{subject.name}</TableCell>
+                      <TableCell align="center">
                         {subject.totalLectures}
                       </TableCell>
                     </TableRow>

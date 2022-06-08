@@ -9,7 +9,7 @@ const Subject = require("../models/subject");
 const secretOrKey = process.env.SECRET_OR_KEY;
 
 module.exports = {
-  adminLogin: async (req, res) => {
+  adminLogin: async (req, res, next) => {
     try {
       //validation needed
       const { registrationNumber, password } = req.body;
@@ -21,6 +21,7 @@ module.exports = {
           .status(401)
           .send({ success: false, message: "Invalid Credential" });
       }
+
       const isCorrect = await bcrypt.compareSync(password, admin.password);
 
       if (!isCorrect) {
@@ -52,7 +53,9 @@ module.exports = {
   },
   addAdmin: async (req, res, next) => {
     try {
+      console.log("fafkbkjabfjadsbfjabfdkjadfb");
       const { name, dob, email, gender, contactNumber, department } = req.body;
+      console.log(req.body);
 
       if (!name || !dob || !email || !department) {
         return res
@@ -118,12 +121,12 @@ module.exports = {
         password: hashedPassword,
       });
       await newAdmin.save();
-      res
+      return res
         .status(200)
         .send({ success: true, message: "Admin added successfully" });
     } catch (err) {
-      console.log(err);
-      res.status(400).send(err);
+      console.log("fafkbkjabfjadsbfjabfdkjadfb");
+      return res.status(400).send(err);
     }
   },
 
@@ -139,6 +142,8 @@ module.exports = {
         gender,
         contactNumber,
         aadharNumber,
+        fatherContactNumber,
+        fatherName,
       } = req.body;
 
       let departmentHelper;
@@ -187,14 +192,18 @@ module.exports = {
         section,
         batch,
         gender,
+        fatherContactNumber,
+        fatherName,
         contactNumber,
         aadharNumber,
       });
       await newStudent.save();
-      res.send({ data: newStudent });
+      return res
+        .status(401)
+        .send({ success: false, message: "Invalid Credential" });
     } catch (e) {
       console.log(e);
-      res.status(400).send(e);
+      return res.status(400).send(e);
     }
   },
 
@@ -233,11 +242,7 @@ module.exports = {
         contactNumber,
         aadharNumber,
       } = req.body;
-
-      // const faculty = await Faculty.findOne({ email });
-      // // if (faculty) {
-      // // }
-
+      console.log(req.body);
       let departmentHelper;
 
       if (department === "CE") {
@@ -288,9 +293,11 @@ module.exports = {
         aadharNumber,
       });
       await newFaculty.save();
-      res.send({ data: newFaculty });
+      return res
+        .status(200)
+        .send({ success: true, message: "Faculty Added Successfully" });
     } catch (e) {
-      res.status(400);
+      return res.status(400).send(err);
     }
   },
 
@@ -327,11 +334,11 @@ module.exports = {
       const { department, year } = req.body;
       const subjects = await Subject.find({ department, year });
       if (subjects.length === 0) {
-        res.status(404).send({ error: "no subject found" });
+        return res.status(404).send({ error: "no subject found" });
       }
-      res.status(200).send({ data: subjects });
+      return res.status(200).send({ data: subjects });
     } catch (e) {
-      res.status(400).send({ error: "Something went wrong" });
+      return res.status(400).send({ error: "Something went wrong" });
     }
   },
 };

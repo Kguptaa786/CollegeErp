@@ -2,12 +2,22 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config();
 }
 
+const port = process.env.PORT || 4000;
+
 const express = require("express");
-const app = express();
 const cors = require("cors");
 const http = require("http");
-const server = http.createServer(app);
+const passport = require("passport");
 const { Server } = require("socket.io");
+
+//all routes import
+const adminRoutes = require("./routes/adminRoutes");
+const studentRoutes = require("./routes/studentRoutes");
+const facultyRoutes = require("./routes/facultyRoutes");
+const Fake = require("./models/fake");
+
+const app = express();
+const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
@@ -16,23 +26,10 @@ const io = new Server(server, {
   },
 });
 
-const passport = require("passport");
-
-//connection
-require("./connection/connection");
-
-//all routes import
-const adminRoutes = require("./routes/adminRoutes");
-const studentRoutes = require("./routes/studentRoutes");
-const facultyRoutes = require("./routes/facultyRoutes");
-const Fake = require("./models/fake");
-
-const port = process.env.PORT || 4000;
-
 //middleware
-app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(cors());
 
 //passport middleware
 app.use(passport.initialize());
@@ -47,6 +44,7 @@ const saveMsg = async (message) => {
   });
   await newData.save();
 };
+
 //socket.io implementation
 io.on("connection", (socket) => {
   socket.on("join room", ({ room1, room2 }) => {
@@ -66,22 +64,13 @@ io.on("connection", (socket) => {
   });
 });
 
-// io.on("connection", (socket) => {
-//   console.log("a user connected");
-//   socket.on("chat", (payload) => {
-//     console.log("what is payload", payload);
-//     io.emit("chat", payload);
-//   });
-
-//   socket.on("disconnect", () => {
-//     console.log("Disconnected user", socket.id);
-//   });
-// });
-
 //routes middleware
 app.use("/", adminRoutes);
 app.use("/", studentRoutes);
 app.use("/", facultyRoutes);
+
+//db connection
+require("./connection/connection");
 
 server.listen(port, () => {
   console.log(`connection at ${port}`);
