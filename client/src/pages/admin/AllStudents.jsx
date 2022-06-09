@@ -57,66 +57,66 @@ function AllStudents() {
     <Fragment>
       <NavbarAdmin />
       <Grid container alignItems="center" justifyContent="center">
-        {!students.length && (
-          <Grid item xs={12} md={6}>
-            <form onSubmit={submitHandler}>
-              <FormControl fullWidth sx={{ m: 2 }}>
-                <InputLabel id="demo-simple-select-label">
-                  Department
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Department"
-                  value={department}
-                  onChange={(e) => {
-                    setDepartment(e.target.value);
-                  }}
-                >
-                  <MenuItem value="CE">CIVIL ENGINEERING</MenuItem>
-                  <MenuItem value="CSE">
-                    COMPUTER SCIENCE & ENGINEERING
-                  </MenuItem>
-                  <MenuItem value="EE">ELECTRICAL ENGINEERING</MenuItem>
-                  <MenuItem value="ECE">
-                    ELECTRONICS & COMMUNICATION ENGINEERING
-                  </MenuItem>
-                  <MenuItem value="ME">MECHANICAL ENGINEERING</MenuItem>
-                  <MenuItem value="MME">
-                    MATERIALS & METALLURGICAL ENGINEERING
-                  </MenuItem>
-                  <MenuItem value="CHEM">CHEMICAL ENGINEERING</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl fullWidth sx={{ m: 2 }}>
-                <InputLabel id="demo-simple-select-label">Year</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Year"
-                  value={year}
-                  onChange={(e) => {
-                    setYear(e.target.value);
-                  }}
-                >
-                  <MenuItem value="first">1st</MenuItem>
-                  <MenuItem value="second">2nd</MenuItem>
-                  <MenuItem value="third">3rd</MenuItem>
-                  <MenuItem value="fourth">4th</MenuItem>
-                </Select>
-              </FormControl>
-              <Button
-                sx={{ m: 2 }}
-                variant="contained"
-                color="success"
-                type="submit"
+        <Grid item xs={12} md={6}>
+          <form onSubmit={submitHandler}>
+            <FormControl fullWidth sx={{ m: 2 }}>
+              <InputLabel id="demo-simple-select-label">Department</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Department"
+                value={department}
+                onChange={(e) => {
+                  setDepartment(e.target.value);
+                }}
               >
-                Submit
-              </Button>
-            </form>
+                <MenuItem value="CE">CIVIL ENGINEERING</MenuItem>
+                <MenuItem value="CSE">COMPUTER SCIENCE & ENGINEERING</MenuItem>
+                <MenuItem value="EE">ELECTRICAL ENGINEERING</MenuItem>
+                <MenuItem value="ECE">
+                  ELECTRONICS & COMMUNICATION ENGINEERING
+                </MenuItem>
+                <MenuItem value="ME">MECHANICAL ENGINEERING</MenuItem>
+                <MenuItem value="MME">
+                  MATERIALS & METALLURGICAL ENGINEERING
+                </MenuItem>
+                <MenuItem value="CHEM">CHEMICAL ENGINEERING</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth sx={{ m: 2 }}>
+              <InputLabel id="demo-simple-select-label">Year</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Year"
+                value={year}
+                onChange={(e) => {
+                  setYear(e.target.value);
+                }}
+              >
+                <MenuItem value="first">1st</MenuItem>
+                <MenuItem value="second">2nd</MenuItem>
+                <MenuItem value="third">3rd</MenuItem>
+                <MenuItem value="fourth">4th</MenuItem>
+              </Select>
+            </FormControl>
+            <Button
+              sx={{ m: 2 }}
+              variant="contained"
+              color="success"
+              type="submit"
+            >
+              Submit
+            </Button>
+          </form>
+        </Grid>
+        {students === undefined && (
+          <Grid item xs={12} md={8}>
+            <p style={{ color: "red" }}>No Students Found</p>
           </Grid>
         )}
-        {students.length && (
+
+        {students !== undefined && students.length && (
           <Grid item xs={12} md={8}>
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -130,13 +130,13 @@ function AllStudents() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {students.map((student) => (
+                  {students.map((student, index) => (
                     <TableRow
-                      key={student._id}
+                      key={index}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        {student.registrationNumber.slice(9)}
+                        {index + 1}
                       </TableCell>
                       <TableCell align="center">
                         {student.registrationNumber}

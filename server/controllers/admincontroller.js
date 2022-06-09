@@ -348,11 +348,13 @@ module.exports = {
       const students = await Student.find({ department, year });
 
       if (students.length === 0) {
-        return res.status(404).send({ message: "No students found" });
+        return res
+          .status(200)
+          .send({ success: true, message: "No students found" });
       }
-      return res.status(200).send({ students: students });
+      return res.status(200).send({ success: true, students: students });
     } catch (e) {
-      return res.status(400).send({ message: "not found" });
+      console.log(e);
     }
   },
 
@@ -377,11 +379,13 @@ module.exports = {
       const { department, year } = req.body;
       const subjects = await Subject.find({ department, year });
       if (subjects.length === 0) {
-        return res.status(404).send({ error: "no subject found" });
+        return res
+          .status(200)
+          .send({ success: true, message: "No Record Found" });
       }
-      return res.status(200).send({ data: subjects });
+      return res.status(200).send({ success: true, subjects: subjects });
     } catch (e) {
-      return res.status(400).send({ error: "Something went wrong" });
+      console.log(e);
     }
   },
 };
