@@ -25,6 +25,7 @@ function AdminLogin(props) {
       .then((admin) => {
         localStorage.setItem("adminToken", admin.data.token);
         window.alert("Successfully Logged in...");
+
         navigate("/admin");
       })
       .catch((err) => {

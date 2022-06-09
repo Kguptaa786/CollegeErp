@@ -34,32 +34,44 @@ function AddSubject() {
   const [department, setDepartment] = useState("");
   const [totalLectures, setTotalLectures] = useState("");
   const [year, setYear] = useState("");
+  const [adminToken, setAdminToken] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("adminToken") === null) {
       navigate("/");
     }
+    setAdminToken(localStorage.getItem("adminToken"));
   }, [navigate]);
 
   const submitHandler = async (event) => {
     event.preventDefault();
+    const headers = {
+      Authorization: `${adminToken}`,
+    };
     await axios
-      .post("http://localhost:4000/admin/addSubject", {
-        name,
-        subjectCode,
-        department,
-        totalLectures,
-        year,
-      })
+      .post(
+        "http://localhost:4000/admin/addSubject",
+        {
+          name,
+          subjectCode,
+          department,
+          totalLectures,
+          year,
+        },
+        { headers: headers }
+      )
       .then((res) => {
-        window.alert("Added Successfully");
+        window.alert(res.data.message);
+        setName("");
+        setSubjectCode("");
+        setDepartment("");
+        setTotalLectures("");
+        setYear("");
       })
-      .catch((err) => console.log(err));
-    // setName("");
-    // setSubjectCode("");
-    // setDepartment("");
-    // setTotalLectures("");
-    // setYear("");
+      .catch((err) => {
+        console.log(err);
+        window.alert("All field required");
+      });
   };
 
   return (

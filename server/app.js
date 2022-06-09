@@ -1,20 +1,11 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
-
 const port = process.env.PORT || 4000;
-
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
 const passport = require("passport");
 const { Server } = require("socket.io");
-
-//all routes import
-const adminRoutes = require("./routes/adminRoutes");
-const studentRoutes = require("./routes/studentRoutes");
-const facultyRoutes = require("./routes/facultyRoutes");
-const Fake = require("./models/fake");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
@@ -31,19 +22,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(cors());
 
+//all routes import
+const adminRoutes = require("./routes/adminRoutes");
+const studentRoutes = require("./routes/studentRoutes");
+const facultyRoutes = require("./routes/facultyRoutes");
+const Fake = require("./models/fake");
+
 //passport middleware
 app.use(passport.initialize());
 
 require("./config/passport");
 
-const saveMsg = async (message) => {
-  const newData = await new Fake({
-    sender: message.sender,
-    message: message.message,
-    room: message.room,
-  });
-  await newData.save();
-};
+app.get(
+  "/protected",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => res.send("got")
+);
 
 //socket.io implementation
 io.on("connection", (socket) => {
@@ -57,7 +51,6 @@ io.on("connection", (socket) => {
       sender: message.sender,
     });
     console.log(message);
-    saveMsg(message);
   });
   socket.on("disconnect", function () {
     console.log("Socket disconnected");

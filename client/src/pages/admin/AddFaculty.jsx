@@ -39,37 +39,49 @@ function AddFaculty() {
   const [dob, setDob] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [aadharNumber, setAadharNumber] = useState("");
+  const [adminToken, setAdminToken] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("adminToken") === null) {
       navigate("/");
     }
+    setAdminToken(localStorage.getItem("adminToken"));
   }, [navigate]);
   const submitHandler = async (event) => {
     event.preventDefault();
+    const headers = {
+      Authorization: `${adminToken}`,
+    };
     await axios
-      .post("http://localhost:4000/admin/addFaculty", {
-        name,
-        email,
-        department,
-        designation,
-        gender,
-        dob,
-        contactNumber,
-        aadharNumber,
-      })
+      .post(
+        "http://localhost:4000/admin/addFaculty",
+        {
+          name,
+          email,
+          department,
+          designation,
+          gender,
+          dob,
+          contactNumber,
+          aadharNumber,
+        },
+        { headers: headers }
+      )
       .then((res) => {
-        window.alert("Added Succesfully");
+        window.alert(res.data.message);
+        setName("");
+        setEmail("");
+        setDesignation("");
+        setGender("");
+        setDob("");
+        setContactNumber("");
+        setAadharNumber("");
+        setDepartment("");
       })
-      .catch((err) => console.log(err));
-    // setName("");
-    // setEmail("");
-    // setDesignation("");
-    // setGender("");
-    // setDob("");
-    // setContactNumber("");
-    // setAadharNumber("");
-    // setDepartment("");
+      .catch((err) => {
+        console.log(err);
+        window.alert("All field required");
+      });
   };
 
   return (

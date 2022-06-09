@@ -39,35 +39,46 @@ function AddAdmin() {
   const [gender, setGender] = useState("");
   const [dob, setDob] = useState("");
   const [contactNumber, setContactNumber] = useState("");
+  const [adminToken, setAdminToken] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("adminToken") === null) {
       navigate("/");
     }
+    setAdminToken(localStorage.getItem("adminToken"));
   }, [navigate]);
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    console.log("skjbfvksj");
+    const headers = {
+      Authorization: `${adminToken}`,
+    };
     await axios
-      .post("http://localhost:4000/admin/addAdmin", {
-        name,
-        email,
-        department,
-        gender,
-        dob,
-        contactNumber,
-      })
+      .post(
+        "http://localhost:4000/admin/addAdmin",
+        {
+          name,
+          email,
+          department,
+          gender,
+          dob,
+          contactNumber,
+        },
+        { headers: headers }
+      )
       .then((res) => {
-        window.alert("Added Successfully");
+        window.alert(res.data.message);
+        setName("");
+        setEmail("");
+        setDepartment("");
+        setGender("");
+        setDob("");
+        setContactNumber("");
       })
-      .catch((err) => console.log(err));
-    // setName("");
-    // setEmail("");
-    // setDepartment("");
-    // setGender("");
-    // setDob("");
-    // setContactNumber("");
+      .catch((err) => {
+        console.log(err);
+        window.alert("All field required");
+      });
   };
 
   return (
@@ -101,6 +112,7 @@ function AddAdmin() {
             <FormControl fullWidth sx={{ m: 2 }}>
               <InputLabel id="demo-simple-select-label">Department</InputLabel>
               <Select
+                required
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 label="Department"

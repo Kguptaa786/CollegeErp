@@ -42,70 +42,82 @@ function AllFaculties() {
   const classes = useStyles();
   const [department, setDepartment] = useState("");
   const [faculties, setFaculties] = useState({});
+  const [adminToken, setAdminToken] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("adminToken") === null) {
       navigate("/");
     }
+    setAdminToken(localStorage.getItem("adminToken"));
   }, [navigate]);
+
   const submitHandler = async (event) => {
     event.preventDefault();
+    const headers = {
+      Authorization: `${adminToken}`,
+    };
     await axios
-      .post("http://localhost:4000/admin/allFaculties", { department })
+      .post(
+        "http://localhost:4000/admin/allFaculties",
+        { department },
+        { headers: headers }
+      )
       .then((res) => {
-        setFaculties(res.data.data);
+        setFaculties(res.data.faculties);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <Fragment>
       <NavbarAdmin />
       <Grid container alignItems="center" justifyContent="center">
-        {!faculties.length && (
-          <Grid item xs={12} md={6}>
-            <form onSubmit={submitHandler}>
-              <FormControl fullWidth sx={{ m: 2 }}>
-                <InputLabel id="demo-simple-select-label">
-                  Department
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  label="Department"
-                  value={department}
-                  onChange={(e) => {
-                    setDepartment(e.target.value);
-                  }}
-                >
-                  <MenuItem value="CE">CIVIL ENGINEERING</MenuItem>
-                  <MenuItem value="CSE">
-                    COMPUTER SCIENCE & ENGINEERING
-                  </MenuItem>
-                  <MenuItem value="EE">ELECTRICAL ENGINEERING</MenuItem>
-                  <MenuItem value="ECE">
-                    ELECTRONICS & COMMUNICATION ENGINEERING
-                  </MenuItem>
-                  <MenuItem value="ME">MECHANICAL ENGINEERING</MenuItem>
-                  <MenuItem value="MME">
-                    MATERIALS & METALLURGICAL ENGINEERING
-                  </MenuItem>
-                  <MenuItem value="CHEM">CHEMICAL ENGINEERING</MenuItem>
-                </Select>
-              </FormControl>
-              <Button
-                sx={{ m: 2 }}
-                variant="contained"
-                color="success"
-                type="submit"
+        <Grid item xs={12} md={6}>
+          <form onSubmit={submitHandler}>
+            <FormControl fullWidth sx={{ m: 2 }}>
+              <InputLabel id="demo-simple-select-label">Department</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Department"
+                value={department}
+                onChange={(e) => {
+                  setDepartment(e.target.value);
+                }}
               >
-                Submit
-              </Button>
-            </form>
+                <MenuItem value="CE">CIVIL ENGINEERING</MenuItem>
+                <MenuItem value="CSE">COMPUTER SCIENCE & ENGINEERING</MenuItem>
+                <MenuItem value="EE">ELECTRICAL ENGINEERING</MenuItem>
+                <MenuItem value="ECE">
+                  ELECTRONICS & COMMUNICATION ENGINEERING
+                </MenuItem>
+                <MenuItem value="ME">MECHANICAL ENGINEERING</MenuItem>
+                <MenuItem value="MME">
+                  MATERIALS & METALLURGICAL ENGINEERING
+                </MenuItem>
+                <MenuItem value="CHEM">CHEMICAL ENGINEERING</MenuItem>
+              </Select>
+            </FormControl>
+            <Button
+              sx={{ m: 2 }}
+              variant="contained"
+              color="success"
+              type="submit"
+            >
+              Submit
+            </Button>
+          </form>
+        </Grid>
+
+        {faculties === undefined && (
+          <Grid item xs={12} md={8}>
+            <p style={{ color: "red" }}>No Faculties Found</p>
           </Grid>
         )}
-        {faculties.length && (
+        {faculties !== undefined && faculties.length && (
           <Grid item xs={12} md={8}>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ mt: 2 }}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
@@ -127,14 +139,12 @@ function AllFaculties() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {faculties.map((faculty) => (
+                  {faculties.map((faculty, index) => (
                     <TableRow
-                      key={faculty._id}
+                      key={index}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
-                      <TableCell align="center">
-                        {faculty.registrationNumber.slice(9)}
-                      </TableCell>
+                      <TableCell align="center">{index + 1}</TableCell>
                       <TableCell align="center">
                         {faculty.registrationNumber}
                       </TableCell>

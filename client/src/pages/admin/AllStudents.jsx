@@ -23,30 +23,35 @@ function AllStudents() {
   const [department, setDepartment] = useState("");
   const [year, setYear] = useState("");
   const [students, setStudents] = useState({});
+  const [adminToken, setAdminToken] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("adminToken") === null) {
       navigate("/");
     }
+    setAdminToken(localStorage.getItem("adminToken"));
   }, [navigate]);
 
   const submitHandler = async (event) => {
     event.preventDefault();
+    const headers = {
+      Authorization: `${adminToken}`,
+    };
     await axios
-      .post("http://localhost:4000/admin/allStudents", {
-        department,
-        year,
-      })
+      .post(
+        "http://localhost:4000/admin/allStudents",
+        {
+          department,
+          year,
+        },
+        { headers: headers }
+      )
       .then((res) => {
-        console.log(res.data.students);
         setStudents(res.data.students);
       })
       .catch((err) => {
         console.log(err);
-        window.alert("No Student Found");
       });
-    setDepartment("");
-    setYear("");
   };
   return (
     <Fragment>

@@ -14,6 +14,7 @@ const adminSchema = new mongoose.Schema({
   },
   dob: {
     type: String,
+    required: true,
   },
   avatar: {
     type: String,
@@ -29,6 +30,7 @@ const adminSchema = new mongoose.Schema({
   },
   department: {
     type: String,
+    required: true,
   },
   contactNumber: {
     type: Number,

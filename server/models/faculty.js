@@ -29,9 +29,9 @@ const facultySchema = new mongoose.Schema({
   registrationNumber: {
     type: String,
   },
-
   dob: {
     type: String,
+    required: true,
   },
   gender: {
     type: String,

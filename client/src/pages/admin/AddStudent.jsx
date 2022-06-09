@@ -30,31 +30,55 @@ function AddStudent() {
   const [fatherName, setFatherName] = useState("");
   const [fatherContactNumber, setFatherContactNumber] = useState("");
   const [aadharNumber, setAadharNumber] = useState("");
+  const [adminToken, setAdminToken] = useState("");
+
   useEffect(() => {
     if (localStorage.getItem("adminToken") === null) {
       navigate("/");
     }
+    setAdminToken(localStorage.getItem("adminToken"));
   }, [navigate]);
   const submitHandler = async (event) => {
     event.preventDefault();
+    const headers = {
+      Authorization: `${adminToken}`,
+    };
     await axios
-      .post("http://localhost:4000/admin/addStudent", {
-        name,
-        email,
-        department,
-        year,
-        section,
-        gender,
-        dob,
-        contactNumber,
-        fatherName,
-        fatherContactNumber,
-        aadharNumber,
-      })
+      .post(
+        "http://localhost:4000/admin/addStudent",
+        {
+          name,
+          email,
+          department,
+          year,
+          section,
+          gender,
+          dob,
+          contactNumber,
+          fatherName,
+          fatherContactNumber,
+          aadharNumber,
+        },
+        { headers: headers }
+      )
       .then((res) => {
-        window.alert("Added successfully");
+        window.alert(res.data.message);
+        setName("");
+        setEmail("");
+        setDepartment("");
+        setYear("");
+        setSection("");
+        setGender("");
+        setDob("");
+        setContactNumber("");
+        setFatherName("");
+        setFatherContactNumber("");
+        setAadharNumber("");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        window.alert("All field required");
+      });
   };
 
   return (
