@@ -5,16 +5,13 @@ const router = express.Router();
 const {
   facultyLogin,
   updatePassword,
-  updateProfile,
   markAttendance,
   markAttendanceHelper,
   uploadMarks,
   uploadMarksHelper,
-  forgotPassword,
-  postOTP,
 } = require("../controllers/facultycontroller");
 
-router.post("/", facultyLogin);
+router.post("/facultyLogin", facultyLogin);
 
 router.post(
   "/faculty/markAttendance",
@@ -22,11 +19,7 @@ router.post(
   markAttendance
 );
 
-router.post(
-  "/faculty/markAttendanceHelper",
-  passport.authenticate("jwt", { session: false }),
-  markAttendanceHelper
-);
+router.post("/faculty/markAttendanceHelper", markAttendanceHelper);
 
 router.post(
   "/faculty/uploadMarks",
@@ -34,10 +27,12 @@ router.post(
   uploadMarks
 );
 
+router.post("/faculty/uploadMarksHelper", uploadMarksHelper);
+
 router.post(
-  "/faculty/uploadMarksHelper",
+  "/faculty/updatePassword",
   passport.authenticate("jwt", { session: false }),
-  uploadMarksHelper
+  updatePassword
 );
 
 module.exports = router;

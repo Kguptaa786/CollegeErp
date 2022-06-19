@@ -26,11 +26,13 @@ function Students() {
   const [currRegistrationNumber, setCurrRegistrationNumber] = useState("");
   const [section, setSection] = useState("");
   const [students, setStudents] = useState({});
+  const [studentToken, setStudentToken] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("studentToken") === null) {
       navigate("/");
     }
+    setStudentToken(localStorage.getItem("studentToken"));
     setCurrRegistrationNumber(
       jwt_decode(localStorage.getItem("studentToken")).registrationNumber
     );
@@ -38,23 +40,30 @@ function Students() {
 
   const submitHandler = async (event) => {
     event.preventDefault();
+    const headers = {
+      Authorization: `${studentToken}`,
+    };
     await axios
-      .post("http://localhost:4000/student/students", {
-        currRegistrationNumber,
-        department,
-        year,
-        section,
-      })
+      .post(
+        "http://localhost:4000/student/students",
+        {
+          currRegistrationNumber,
+          department,
+          year,
+          section,
+        },
+        { headers: headers }
+      )
       .then((res) => {
-        console.log(res.data.students);
+        // console.log(res.data.students);
         setStudents(res.data.students);
       })
       .catch((err) => {
-        console.log(err);
-        window.alert("No Student Found");
+        window.alert(err.response.data.message);
       });
     setDepartment("");
     setYear("");
+    setSection("");
   };
   return (
     <Fragment>

@@ -27,9 +27,9 @@ function Dashboard(props) {
         <Card sx={{ maxWidth: 345 }}>
           <CardMedia
             component="img"
-            height="194"
-            image="../../public/images/main.jpg"
-            alt="Krishna"
+            height="230"
+            image={require("../images/default-avatar.png")}
+            alt={props.data.name}
           />
           <CardHeader
             title={props.data.name}
@@ -40,19 +40,25 @@ function Dashboard(props) {
       <Box className={classes.child}>
         <Card sx={{ maxWidth: 345 }}>
           <CardContent>
-            <Typography variant="h6">{props.data.name}</Typography>
+            <Typography variant="h6">Name: {props.data.name}</Typography>
           </CardContent>
           <CardContent>
-            <Typography variant="h6">{props.data.email}</Typography>
+            <Typography variant="h6">Email: {props.data.email}</Typography>
           </CardContent>
           <CardContent>
-            <Typography variant="h6">{props.data.dob}</Typography>
+            <Typography variant="h6">
+              Date of Birth: {props.data.dob}
+            </Typography>
           </CardContent>
           <CardContent>
-            <Typography variant="h6">{props.data.department}</Typography>
+            <Typography variant="h6">
+              Department: {props.data.department}
+            </Typography>
           </CardContent>
           <CardContent>
-            <Typography variant="h6">{props.data.contactNummber}</Typography>
+            <Typography variant="h6">
+              Contact No: {props.data.contactNummber}
+            </Typography>
           </CardContent>
         </Card>
       </Box>

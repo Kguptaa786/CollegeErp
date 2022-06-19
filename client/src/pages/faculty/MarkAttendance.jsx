@@ -28,11 +28,13 @@ function MarkAttendance() {
   const [students, setStudents] = useState({});
   const [allSubjectCode, setAllSubjectCode] = useState({});
   const [checkedValue, setCheckedValue] = useState([]);
+  const [facultyToken, setFacultyToken] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("facultyToken") === null) {
       navigate("/");
     }
+    setFacultyToken(localStorage.getItem("facultyToken"));
   }, [navigate]);
 
   const checkChangeHandler = (event) => {
@@ -47,18 +49,27 @@ function MarkAttendance() {
   };
   const submitHandler = async (event) => {
     event.preventDefault();
+    const headers = {
+      Authorization: `${facultyToken}`,
+    };
     await axios
-      .post("http://localhost:4000/faculty/markAttendance", {
-        department,
-        year,
-        section,
-      })
+      .post(
+        "http://localhost:4000/faculty/markAttendance",
+        {
+          department,
+          year,
+          section,
+        },
+        { headers: headers }
+      )
       .then((res) => {
-        console.log(res.data);
-        setStudents(res.data.data);
+        setStudents(res.data.students);
         setAllSubjectCode(res.data.allSubjectCode);
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => {
+        console.log(err);
+        window.alert("All field required");
+      });
   };
 
   const secondSubmitHandler = async (event) => {
@@ -72,16 +83,18 @@ function MarkAttendance() {
         checkedValue,
       })
       .then((res) => {
-        window.alert("Attendence Mark Successfully");
+        window.alert(res.data.message);
         navigate("/faculty");
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        window.alert(err.response.data.message);
+      });
   };
   return (
     <Fragment>
       <NavbarFaculty />
       <Grid container alignItems="center" justifyContent="center">
-        {!students.length && (
+        {students.length === undefined && !students.length && (
           <Grid item xs={12} md={6}>
             <form onSubmit={submitHandler}>
               <FormControl fullWidth sx={{ m: 2 }}>
@@ -89,6 +102,7 @@ function MarkAttendance() {
                   Department
                 </InputLabel>
                 <Select
+                  defaultValue=""
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Department"
@@ -115,6 +129,7 @@ function MarkAttendance() {
               <FormControl fullWidth sx={{ m: 2 }}>
                 <InputLabel id="demo-simple-select-label">Year</InputLabel>
                 <Select
+                  defaultValue=""
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Year"
@@ -132,6 +147,7 @@ function MarkAttendance() {
               <FormControl fullWidth sx={{ m: 2 }}>
                 <InputLabel id="demo-simple-select-label">Section</InputLabel>
                 <Select
+                  defaultValue=""
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Section"
@@ -156,7 +172,7 @@ function MarkAttendance() {
             </form>
           </Grid>
         )}
-        {students.length && (
+        {students !== undefined && students.length && (
           <Grid item xs={12} md={8}>
             <form onSubmit={secondSubmitHandler}>
               <FormControl fullWidth sx={{ m: 2 }}>
@@ -164,6 +180,7 @@ function MarkAttendance() {
                   Subject Code
                 </InputLabel>
                 <Select
+                  defaultValue=""
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   label="Subject Code"

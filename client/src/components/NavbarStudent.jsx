@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link, NavLink } from "react-router-dom";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -20,6 +20,7 @@ const Links = [
   { keyVal: 2, page: "Subject List", path: "/student/subjectList" },
   { keyVal: 3, page: "Attendance Status", path: "/student/attendanceStatus" },
   { keyVal: 4, page: "Students", path: "/student/students" },
+  { keyVal: 5, page: "Update Password", path: "/student/updatePassword" },
 ];
 
 const useStyles = makeStyles({
@@ -80,7 +81,12 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
           >
-            CollegeERP
+            <Link
+              to="/student"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              CollegeERP
+            </Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -114,7 +120,14 @@ const ResponsiveAppBar = () => {
             >
               {Links.map((Link) => (
                 <MenuItem key={Link.keyVal} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{Link.page}</Typography>
+                  <Typography textAlign="center">
+                    <NavLink
+                      to={Link.path}
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      {Link.page}
+                    </NavLink>{" "}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -125,7 +138,12 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            CollegeERP
+            <Link
+              to="/student"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              CollegeERP
+            </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {Links.map((Link) => (

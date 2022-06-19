@@ -32,10 +32,14 @@ function PeerStudent(props) {
     setCurrRegistrationNumber(
       jwt_decode(localStorage.getItem("studentToken")).registrationNumber
     );
+  }, [navigate]);
+
+  useEffect(() => {
     axios
       .get(`http://localhost:4000/student/${params.registrationNumber}`)
-      .then((res) => setStudent(res.data.student));
-  }, [navigate, params.registrationNumber]);
+      .then((res) => setStudent(res.data.student))
+      .catch((e) => console.log(e));
+  }, [params.registrationNumber]);
 
   return (
     <>
@@ -55,18 +59,18 @@ function PeerStudent(props) {
               <Card sx={{ maxWidth: 345 }}>
                 <CardMedia
                   component="img"
-                  height="194"
-                  image="../../public/images/main.jpg"
-                  alt="Krishna"
+                  height="210"
+                  image={require("../../images/default-avatar.png")}
+                  alt={student.name}
                 />
                 <CardHeader
                   title={student.name}
                   subheader={
                     <Link
                       to={`../../student/chat/${
-                        currRegistrationNumber +
+                        student.registrationNumber +
                         "_" +
-                        student.registrationNumber
+                        currRegistrationNumber
                       }`}
                     >
                       Chat
@@ -78,18 +82,17 @@ function PeerStudent(props) {
             <Box className={classes.child}>
               <Card sx={{ maxWidth: 345 }}>
                 <CardContent>
+                  <Typography variant="h6">Name: {student.name}</Typography>
+                </CardContent>
+                <CardContent>
                   <Typography variant="h6">
-                    {student.registrationNumber}
+                    Department: {student.department}
                   </Typography>
                 </CardContent>
                 <CardContent>
-                  <Typography variant="h6">{student.name}</Typography>
-                </CardContent>
-                <CardContent>
-                  <Typography variant="h6">{student.department}</Typography>
-                </CardContent>
-                <CardContent>
-                  <Typography variant="h6">{student.section}</Typography>
+                  <Typography variant="h6">
+                    Section: {student.section}
+                  </Typography>
                 </CardContent>
               </Card>
             </Box>

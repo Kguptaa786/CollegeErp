@@ -26,18 +26,11 @@ app.use(cors());
 const adminRoutes = require("./routes/adminRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const facultyRoutes = require("./routes/facultyRoutes");
-const Fake = require("./models/fake");
 
 //passport middleware
 app.use(passport.initialize());
 
 require("./config/passport");
-
-app.get(
-  "/protected",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => res.send("got")
-);
 
 //socket.io implementation
 io.on("connection", (socket) => {
@@ -48,9 +41,10 @@ io.on("connection", (socket) => {
   socket.on("private message", (message) => {
     io.to(message.room).emit("new Message", {
       message: message.message,
-      sender: message.sender,
+      senderName: message.senderName,
+      receiverName: message.receiverName,
     });
-    console.log(message);
+    // console.log(message);
   });
   socket.on("disconnect", function () {
     console.log("Socket disconnected");

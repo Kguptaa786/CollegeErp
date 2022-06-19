@@ -7,12 +7,14 @@ const {
   allStudents,
   getStudentDetail,
   attendanceStatus,
-  getMsg,
+  getPrivateChat,
+  postPrivateChat,
   subjectList,
   testPerformance,
+  updatePassword,
 } = require("../controllers/studentcontroller");
 
-router.post("/", studentLogin);
+router.post("/studentLogin", studentLogin);
 
 router.post(
   "/student/students",
@@ -33,17 +35,21 @@ router.get(
 );
 
 router.get(
-  "student/testPerformace",
+  "/student/testPerformance",
   passport.authenticate("jwt", { session: false }),
   testPerformance
 );
 
-router.get(
-  "/student/:registrationNumber",
+router.post(
+  "/student/updatePassword",
   passport.authenticate("jwt", { session: false }),
-  getStudentDetail
+  updatePassword
 );
 
-router.get("/getMsg", getMsg);
+router.get("/student/:registrationNumber", getStudentDetail);
+
+router.get("/student/chat/:roomId", getPrivateChat);
+
+router.post("/student/chat/:roomId", postPrivateChat);
 
 module.exports = router;

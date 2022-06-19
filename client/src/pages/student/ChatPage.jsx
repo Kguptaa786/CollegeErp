@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import jwt_decode from "jwt-decode";
 import axios from "axios";
 import io from "socket.io-client";
 import { useParams, useNavigate } from "react-router-dom";
@@ -8,8 +9,14 @@ import ReactScrollToBottom from "react-scroll-to-bottom";
 import "./ChatPage.css";
 import Message from "./ChatPageHelper/Message";
 
-const ENDPOINT = "http://localhost:4000";
 let socket;
+
+//Swap HelperFunction
+function swap(input, value_1, value_2) {
+  var temp = input[value_1];
+  input[value_1] = input[value_2];
+  input[value_2] = temp;
+}
 function ChatPage() {
   const navigate = useNavigate();
   const params = useParams();
@@ -17,95 +24,122 @@ function ChatPage() {
   const [room2, setRoom2] = useState("");
   const [receiverRegistrationNumber, setReceiverRegistrationNumber] =
     useState("");
-  const [senderRegistrationNumber, setSenderRegistrationNumber] =
-    useState("second");
+  const [receiverName, setReceiverName] = useState("");
+  const [student, setStudent] = useState({});
   const [message, setMessage] = useState("");
   const [messageArray, setMessageArray] = useState([]);
   const [olderMessages, setOlderMessages] = useState([]);
+  const ENDPOINT = "http://localhost:4000";
 
   useEffect(() => {
     if (localStorage.getItem("studentToken") === null) {
       navigate("/");
     }
+    setStudent(jwt_decode(localStorage.getItem("studentToken")));
   }, [navigate]);
 
+  //setting room variable
   useEffect(() => {
-    let temp = params.room;
+    let temp = params.roomId;
     socket = io(ENDPOINT);
     let tempArr = temp.split("_");
-    setSenderRegistrationNumber(tempArr[0]);
-    setReceiverRegistrationNumber(tempArr[1]);
+    setReceiverRegistrationNumber(tempArr[0]);
     setRoom1(temp);
-    let tempRoom2 = tempArr[1] + "_" + tempArr[0];
+    swap(tempArr, 0, 1);
+    let tempRoom2 = tempArr[0] + "_" + tempArr[1];
     setRoom2(tempRoom2);
-  }, [params.room]);
+  }, [ENDPOINT, params.roomId]);
 
   useEffect(() => {
-    // dispatch(getPrivateConversation(room1));
-    // dispatch(getPrivateConversation2(room2));
+    let temp = params.roomId;
+    let tempArr = temp.split("_");
+    axios
+      .get(`http://localhost:4000/student/${tempArr[0]}`)
+      .then((res) => {
+        setReceiverName(res.data.student.name);
+      })
+      .catch((err) => console.log(err));
+  }, [params.roomId]);
+  //setting socket endpoint
+  useEffect(() => {
     socket = io(ENDPOINT);
     socket.emit("join room", {
       room1,
       room2,
     });
     socket.on("new Message", (data) => {
+      console.log(data);
       setMessageArray([...messageArray, data]);
     });
-    // return () => {
-    //   window.alert("sdabfkaj");
-    //   socket.emit("disconnect");
-    //   socket.off();
-    // };
+    return () => {
+      socket && socket.disconnect();
+      // socket.emit("disconnect");
+      // socket.off();
+    };
   }, [room1, room2, messageArray]);
 
   // useEffect(() => {
   //   axios
-  //     .post("http://localhost:4000/student/students/getOlderMessage", {
-  //       receiverRegistrationNumber,
-  //       senderRegistrationNumber,
-  //     })
+  //     .get(`http://localhost:4000/student/chat/${room1}`)
   //     .then((res) => {
-  //       setOlderMessages(res.data.olderMessages);
+  //       setOlderMessages(res.data.result);
   //     })
   //     .catch((e) => console.log(e));
-  // });
+  //   axios
+  //     .get(`http://localhost:4000/student/chat/${room2}`)
+  //     .then((res) => {
+  //       setOlderMessages([...olderMessages, res.data.result]);
+  //     })
+  //     .catch((e) => console.log(e));
+  // }, [olderMessages, room1, room2]);
 
-  useEffect(() => {
-    axios.get("http://localhost:4000/getMsg").then((res) => {
-      setOlderMessages(res.data.msg).catch((e) => console.log(e));
-    });
-  }, []);
-
-  const formHandler = (e) => {
+  const formHandler = async (e) => {
+    console.log(student.name);
+    console.log(receiverName);
     e.preventDefault();
     if (message.trim().length > 0) {
       socket.emit("private message", {
-        sender: "john",
+        senderName: student.name,
         message,
         room: room1,
+        receiverName: receiverName,
       });
       setMessage("");
-      // let messageObj = {
-      //   roomId: room1,
-      //   senderName: store.student.student.student.name,
-      //   senderId: store.student.student.student._id,
-      //   message,
-      //   senderRegistrationNumber:
-      //     store.student.student.student.registrationNumber,
-      //   receiverRegistrationNumber,
-      // };
-      // dispatch(sendMessage(room1, messageObj));
+
+      //axios post sendmessage
+      await axios
+        .post(`http://localhost:4000/student/chat/${room1}`, {
+          roomId: room1,
+          senderName: student.name,
+          senderId: student.id,
+          message,
+          senderRegistrationNumber: student.registrationNumber,
+          receiverRegistrationNumber,
+        })
+        .then((res) => console.log(res))
+        .catch((e) => console.log(e));
     } else {
       window.alert("Can't send empty message");
     }
   };
 
   // useEffect(() => {
-  //   socket.on("new Message", (data) => {
-  //     setOlderMessages(store.student.privateChat);
-  //     setMessageArray([...messageArray, data]);
-  //   });
-  // }, [messageArray, olderMessages]);
+  //   axios
+  //     .get(`http://localhost:4000/student/chat/${room1}`)
+  //     .then((res) => {
+  //       setOlderMessages(res.data.result);
+  //     })
+  //     .catch((e) => console.log(e.message));
+  // }, [room1]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:4000/student/chat/${room1}`).then((res) => {
+      setOlderMessages(res.data.result);
+    });
+    socket.on("new Message", (data) => {
+      setMessageArray([...messageArray, data]);
+    });
+  }, [messageArray, room1]);
 
   return (
     <>
@@ -120,14 +154,41 @@ function ChatPage() {
               <h2>Let's Chat</h2>
             </div>
             <ReactScrollToBottom className="chatBox">
-              {messageArray.map((payload, index) => (
-                <Message
-                  user="kk"
-                  key={index}
-                  message={payload.message}
-                  classs="right"
-                />
-              ))}
+              {olderMessages !== undefined &&
+                olderMessages.map((payload, index) =>
+                  payload.senderName !== student.name ? (
+                    <Message
+                      recieverName=""
+                      key={index}
+                      message={payload.message}
+                      classs="right"
+                    />
+                  ) : (
+                    <Message
+                      recieverName={payload.receiverName}
+                      key={index}
+                      message={payload.message}
+                      classs="left"
+                    />
+                  )
+                )}
+              {messageArray.map((payload, index) =>
+                payload.senderName === student.name ? (
+                  <Message
+                    user=""
+                    key={index}
+                    message={payload.message}
+                    classs="right"
+                  />
+                ) : (
+                  <Message
+                    user={payload.receiverName}
+                    key={index}
+                    message={payload.message}
+                    classs="left"
+                  />
+                )
+              )}
             </ReactScrollToBottom>
             <form onSubmit={formHandler}>
               <div className="inputBox">
@@ -144,16 +205,6 @@ function ChatPage() {
             </form>
           </div>
         </div>
-        {/* <Box>
-          <h3>Chat begin</h3>
-          {olderMessages.length &&
-            olderMessages.map((msg, index) => {
-              return <p key={index}>{msg.message}</p>;
-            })}
-          {messageArray.map((payload, index) => {
-            return <p key={index}>{payload.message}</p>;
-          })}
-        </Box> */}
       </Grid>
     </>
   );

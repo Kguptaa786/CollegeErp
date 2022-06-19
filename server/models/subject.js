@@ -19,9 +19,9 @@ const subjectSchema = new mongoose.Schema({
   year: {
     type: String,
   },
-  attendence: {
+  attendance: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "attendence",
+    ref: "Attandance",
   },
 });
 

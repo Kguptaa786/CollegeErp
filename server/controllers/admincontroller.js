@@ -1,12 +1,11 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const jwt_decode = require("jwt-decode");
 const Admin = require("../models/admin");
 const Student = require("../models/student");
 const Faculty = require("../models/faculty");
 const Subject = require("../models/subject");
-
 const secretOrKey = process.env.SECRET_OR_KEY;
+const mailSender = require("../config/nodemailer");
 
 module.exports = {
   adminLogin: async (req, res, next) => {
@@ -25,7 +24,7 @@ module.exports = {
       if (!admin) {
         return res
           .status(401)
-          .send({ success: false, message: "Invalid Credential" });
+          .json({ success: false, message: "Invalid Credential" });
       }
 
       const isCorrect = await bcrypt.compareSync(password, admin.password);
@@ -33,7 +32,7 @@ module.exports = {
       if (!isCorrect) {
         return res
           .status(401)
-          .send({ success: false, message: "Invalid Credential" }); //validation needed
+          .json({ success: false, message: "Invalid Credential" }); //validation needed
       }
 
       const payload = {
@@ -50,7 +49,8 @@ module.exports = {
       };
 
       const token = jwt.sign(payload, secretOrKey, { expiresIn: "1d" });
-      return res.status(200).send({
+
+      return res.status(200).json({
         success: true,
         message: "Successfully Logged in",
         token: "Bearer " + token,
@@ -65,15 +65,15 @@ module.exports = {
       if (!name || !dob || !email || !department) {
         return res
           .status(400)
-          .send({ success: false, message: "Some data fields are empty" });
+          .json({ success: false, message: "Some data fields are empty" });
       }
 
       const if_already_present = await Admin.findOne({ email });
 
       if (if_already_present) {
         return res
-          .staus(400)
-          .send({ success: false, message: "Email already existing" });
+          .status(401)
+          .json({ success: false, message: "Email already existing" });
       }
 
       //regisration number generating
@@ -125,14 +125,16 @@ module.exports = {
         contactNumber,
         password: hashedPassword,
       });
+      mailSender(email, dob, registrationNumber, name);
       await newAdmin.save();
       return res
         .status(200)
-        .send({ success: true, message: "Admin added successfully" });
+        .json({ success: true, message: "Admin added successfully" });
     } catch (err) {
+      console.log(err);
       return res
         .status(400)
-        .send({ success: false, message: "Something went wrong" });
+        .json({ success: false, message: "Something went wrong" });
     }
   },
 
@@ -155,7 +157,7 @@ module.exports = {
       if (!name || !dob || !email || !department || !year || !section) {
         return res
           .status(400)
-          .send({ success: false, message: "Some data fields are empty" });
+          .json({ success: false, message: "Some data fields are empty" });
       }
 
       const if_already_present = await Student.findOne({ email });
@@ -163,7 +165,7 @@ module.exports = {
       if (if_already_present) {
         return res
           .staus(400)
-          .send({ success: false, message: "Email already existing" });
+          .json({ success: false, message: "Email already existing" });
       }
 
       let departmentHelper;
@@ -217,10 +219,11 @@ module.exports = {
         contactNumber,
         aadharNumber,
       });
+      mailSender(email, dob, registrationNumber, name);
       await newStudent.save();
       return res
         .status(200)
-        .send({ success: true, message: "Student added successfully..." });
+        .json({ success: true, message: "Student added successfully..." });
     } catch (e) {
       console.log(e);
     }
@@ -230,15 +233,15 @@ module.exports = {
     try {
       const { name, subjectCode, totalLectures, department, year } = req.body;
 
-      if (!name || !subjectCode || !department || !year) {
+      if (!name || !subjectCode || !department || !year || !totalLectures) {
         return res
           .status(400)
-          .send({ success: false, message: "All field required" });
+          .json({ success: false, message: "All field required" });
       }
 
       const code = await Subject.findOne({ subjectCode });
       if (code) {
-        return res.status(404).send({ message: "already present" });
+        return res.status(404).json({ message: "already present" });
       }
 
       const newSubject = await new Subject({
@@ -251,7 +254,7 @@ module.exports = {
       await newSubject.save();
       res
         .status(200)
-        .send({ success: true, message: "Subject Added Successfully" });
+        .json({ success: true, message: "Subject Added Successfully" });
     } catch (e) {
       console.log(e);
     }
@@ -270,18 +273,27 @@ module.exports = {
         aadharNumber,
       } = req.body;
 
-      if (!name || !dob || !email || !department) {
+      if (
+        !name ||
+        !dob ||
+        !email ||
+        !department ||
+        !designation ||
+        !gender ||
+        !contactNumber ||
+        !aadharNumber
+      ) {
         return res
           .status(400)
-          .send({ success: false, message: "Some data fields are empty" });
+          .json({ success: false, message: "All fields are required" });
       }
 
       const if_already_present = await Faculty.findOne({ email });
 
       if (if_already_present) {
         return res
-          .staus(400)
-          .send({ success: false, message: "Email already existing" });
+          .status(400)
+          .json({ success: false, message: "Email already existing" });
       }
 
       let departmentHelper;
@@ -333,10 +345,11 @@ module.exports = {
         contactNumber,
         aadharNumber,
       });
+      mailSender(email, dob, registrationNumber, name);
       await newFaculty.save();
       return res
         .status(200)
-        .send({ success: true, message: "Faculty Added Successfully" });
+        .json({ success: true, message: "Faculty Added Successfully" });
     } catch (e) {
       console.log(e);
     }
@@ -349,10 +362,10 @@ module.exports = {
 
       if (students.length === 0) {
         return res
-          .status(200)
-          .send({ success: true, message: "No students found" });
+          .status(400)
+          .json({ success: false, message: "No students found" });
       }
-      return res.status(200).send({ success: true, students: students });
+      return res.status(200).json({ success: true, students: students });
     } catch (e) {
       console.log(e);
     }
@@ -365,10 +378,10 @@ module.exports = {
 
       if (faculties.length === 0) {
         return res
-          .status(200)
-          .send({ success: true, message: "No Record Found" });
+          .status(400)
+          .json({ success: false, message: "No Record Found" });
       }
-      res.status(200).send({ success: true, faculties: faculties });
+      res.status(200).json({ success: true, faculties: faculties });
     } catch (err) {
       console.log(err);
     }
@@ -380,12 +393,32 @@ module.exports = {
       const subjects = await Subject.find({ department, year });
       if (subjects.length === 0) {
         return res
-          .status(200)
-          .send({ success: true, message: "No Record Found" });
+          .status(400)
+          .json({ success: false, message: "No Record Found" });
       }
-      return res.status(200).send({ success: true, subjects: subjects });
+      return res.status(200).json({ success: true, subjects: subjects });
     } catch (e) {
       console.log(e);
+    }
+  },
+  updatePassword: async (req, res) => {
+    try {
+      const { oldPassword, newPassword, registrationNumber } = req.body;
+      const admin = await Admin.findOne({ registrationNumber });
+      const isCorrect = await bcrypt.compareSync(oldPassword, admin.password);
+      if (!isCorrect) {
+        return res
+          .status(401)
+          .json({ success: false, message: "Invalid Credential" });
+      }
+      const hashedPassword = await bcrypt.hash(newPassword, 4);
+      admin.password = hashedPassword;
+      await admin.save();
+      return res
+        .status(200)
+        .json({ success: true, message: "Password update successfully" });
+    } catch (err) {
+      console.log(err);
     }
   },
 };

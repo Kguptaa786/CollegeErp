@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,6 +12,7 @@ import {
 
 import Image from "../images/main3.jpg";
 import { makeStyles } from "@mui/styles";
+import EndPointContext from "../context/EndPointContext";
 
 const useStyles = makeStyles({
   bgImage: {
@@ -27,28 +28,40 @@ const useStyles = makeStyles({
 });
 
 function FacultyStudentLoginPage(props) {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
+  // console.log(ENDPOINT);
   const classes = useStyles();
   const navigate = useNavigate();
-  console.log(navigate);
   const [studentRegNumber, setStudentRegNumber] = useState("");
   const [studentPassword, setStudentPassword] = useState("");
   const [facultyRegNumber, setFacultyRegNumber] = useState("");
   const [facultyPassword, setFacultyPassword] = useState("");
+
+  useEffect(() => {
+    if (localStorage.getItem("adminToken") !== null) {
+      navigate("/admin");
+    }
+    if (localStorage.getItem("studentToken") !== null) {
+      navigate("/student");
+    }
+    if (localStorage.getItem("facultyToken") !== null) {
+      navigate("/faculty");
+    }
+  }, [navigate]);
   const studentSubmitHandler = async (event) => {
     event.preventDefault();
     await axios
-      .post("http://localhost:4000/", {
+      .post(ENDPOINT + "studentLogin", {
         registrationNumber: studentRegNumber,
         password: studentPassword,
       })
-      .then((student) => {
-        localStorage.setItem("studentToken", student.data.token);
-        window.alert("Successfully Logged in...");
+      .then((res) => {
+        localStorage.setItem("studentToken", res.data.token);
+        window.alert(res.data.message);
         navigate("/student");
       })
       .catch((err) => {
-        console.log(err);
-        window.alert("Invalid credential");
+        window.alert(err.response.data.message);
         navigate("/");
       });
     setStudentRegNumber("");
@@ -57,18 +70,18 @@ function FacultyStudentLoginPage(props) {
   const facultySubmitHandler = async (event) => {
     event.preventDefault();
     await axios
-      .post("http://localhost:4000/", {
+      .post(ENDPOINT + "facultyLogin", {
         registrationNumber: facultyRegNumber,
         password: facultyPassword,
       })
-      .then((faculty) => {
-        localStorage.setItem("adminToken", faculty.data.token);
-        window.alert("Successfully Logged in...");
+      .then((res) => {
+        localStorage.setItem("facultyToken", res.data.token);
+        window.alert(res.data.message);
         navigate("/faculty");
       })
       .catch((err) => {
-        console.log(err);
-        window.alert("Invalid credential");
+        // console.log(err);
+        window.alert(err.response.data.message);
         navigate("/");
       });
     setFacultyRegNumber("");

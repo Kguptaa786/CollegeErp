@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 const markSchema = new mongoose.Schema({
   student: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "student",
+    ref: "Student",
   },
   subject: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "subject",
+    ref: "Subject",
   },
   exam: {
     type: String,

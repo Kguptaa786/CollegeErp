@@ -11,6 +11,7 @@ const {
   addFaculty,
   getAllFaculty,
   getAllSubject,
+  updatePassword,
 } = require("../controllers/admincontroller");
 
 router.post("/adminLogin", adminLogin);
@@ -55,6 +56,12 @@ router.post(
   "/admin/allSubjects",
   passport.authenticate("jwt", { session: false }),
   getAllSubject
+);
+
+router.post(
+  "/admin/updatePassword",
+  passport.authenticate("jwt", { session: false }),
+  updatePassword
 );
 
 module.exports = router;

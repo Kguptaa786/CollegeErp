@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import { Link, NavLink } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -60,7 +60,7 @@ const ResponsiveAppBar = () => {
     setAnchorElUser(null);
   };
   const handleLogout = () => {
-    localStorage.removeItem("studentToken");
+    localStorage.removeItem("facultyToken");
     navigate("/");
   };
 
@@ -78,7 +78,12 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
           >
-            CollegeERP
+            <Link
+              to="/faculty"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              CollegeERP
+            </Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -112,7 +117,14 @@ const ResponsiveAppBar = () => {
             >
               {Links.map((Link) => (
                 <MenuItem key={Link.keyVal} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{Link.page}</Typography>
+                  <Typography textAlign="center">
+                    <NavLink
+                      to={Link.path}
+                      style={{ textDecoration: "none", color: "black" }}
+                    >
+                      {Link.page}
+                    </NavLink>{" "}
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -123,7 +135,12 @@ const ResponsiveAppBar = () => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            CollegeERP
+            <Link
+              to="/faculty"
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              CollegeERP
+            </Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {Links.map((Link) => (

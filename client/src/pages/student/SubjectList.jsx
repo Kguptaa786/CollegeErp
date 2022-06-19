@@ -21,31 +21,27 @@ import NavbarStudent from "../../components/NavbarStudent";
 
 function SubjectList() {
   const navigate = useNavigate();
-  const [year, setYear] = useState("");
-  const [department, setDepartment] = useState("");
   const [subjects, setSubjects] = useState({});
 
   useEffect(() => {
     if (localStorage.getItem("studentToken") === null) {
       navigate("/");
     }
-    setYear(jwt_decode(localStorage.getItem("studentToken")).year);
-    setDepartment(jwt_decode(localStorage.getItem("studentToken")).department);
-    axios
-      .get("http://localhost:4000/student/subjectList", {
-        params: {
-          department,
-          year,
-        },
-      })
-      .then((res) => {
-        setSubjects(res.data.subjects);
-      })
-      .catch((err) => {
-        console.log(err);
-        window.alert("No Student Found");
+  }, [navigate]);
+
+  useEffect(() => {
+    const headers = {
+      Authorization: `${localStorage.getItem("studentToken")}`,
+    };
+
+    const helper = async () => {
+      const res = await axios.get("http://localhost:4000/student/subjectList", {
+        headers: headers,
       });
-  }, [navigate, department, year]);
+      setSubjects(res.data.subjects);
+    };
+    helper();
+  }, []);
 
   return (
     <Fragment>

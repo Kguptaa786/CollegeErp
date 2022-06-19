@@ -1,14 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
 import {
   Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  Button,
-  MenuItem,
   Paper,
   Table,
   TableHead,
@@ -21,29 +15,28 @@ import NavbarStudent from "../../components/NavbarStudent";
 
 function AttendanceStatus() {
   const navigate = useNavigate();
-
-  const [studentId, setStudentId] = useState("");
-  const [subjects, setSubjects] = useState({});
+  const [results, setResults] = useState({});
 
   useEffect(() => {
     if (localStorage.getItem("studentToken") === null) {
       navigate("/");
     }
-    setStudentId(jwt_decode(localStorage.getItem("studentToken")).id);
-    axios
-      .get("http://localhost:4000/student/attendanceStatus", {
-        params: {
-          studentId,
-        },
-      })
-      .then((res) => {
-        setSubjects(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-        window.alert("No Student Found");
-      });
-  }, [navigate, studentId]);
+  }, [navigate]);
+
+  useEffect(() => {
+    const headers = {
+      Authorization: `${localStorage.getItem("studentToken")}`,
+    };
+
+    const helper = async () => {
+      const res = await axios.get(
+        "http://localhost:4000/student/attendanceStatus",
+        { headers: headers }
+      );
+      setResults(res.data.result);
+    };
+    helper();
+  }, []);
 
   return (
     <Fragment>
@@ -64,17 +57,25 @@ function AttendanceStatus() {
                     Subject Name
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Year
+                    Maximum Hours
                   </TableCell>
                   <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Total Lectures
+                    Present Hours
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Absent Hours
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Total Hours
+                  </TableCell>
+                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                    Attendance
                   </TableCell>
                 </TableRow>
               </TableHead>
-
               <TableBody>
-                {subjects.length &&
-                  subjects.map((subject, index) => (
+                {results.length &&
+                  results.map((result, index) => (
                     <TableRow
                       key={index}
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -82,14 +83,17 @@ function AttendanceStatus() {
                       <TableCell align="center" component="th" scope="row">
                         {index + 1}
                       </TableCell>
+                      <TableCell align="center">{result.subjectCode}</TableCell>
+                      <TableCell align="center">{result.subjectName}</TableCell>
+                      <TableCell align="center">{result.maxHours}</TableCell>
                       <TableCell align="center">
-                        {subject.subjectCode}
+                        {result.maxHours - result.absentHours}
                       </TableCell>
-                      <TableCell align="center">{subject.name}</TableCell>
-                      <TableCell align="center">{subject.year}</TableCell>
+                      <TableCell align="center">{result.absentHours}</TableCell>
                       <TableCell align="center">
-                        {subject.totalLectures}
+                        {result.totalLecture}
                       </TableCell>
+                      <TableCell align="center">{result.attendance}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>

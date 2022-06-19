@@ -69,8 +69,7 @@ function AddSubject() {
         setYear("");
       })
       .catch((err) => {
-        console.log(err);
-        window.alert("All field required");
+        window.alert(err.response.data.message);
       });
   };
 
@@ -78,7 +77,7 @@ function AddSubject() {
     <Fragment>
       <NavbarAdmin />
       <Grid container alignItems="center" justifyContent="center">
-        <Grid item xs={12} md={6}>
+        <Grid item xs={8} md={6}>
           <form onSubmit={submitHandler}>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField

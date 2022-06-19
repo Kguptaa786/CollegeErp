@@ -30,11 +30,13 @@ function MarkAttendance() {
   const [students, setStudents] = useState({});
   const [allSubjectCode, setAllSubjectCode] = useState({});
   const [marks, setMarks] = useState([]);
+  const [facultyToken, setFacultyToken] = useState("");
 
   useEffect(() => {
     if (localStorage.getItem("facultyToken") === null) {
       navigate("/");
     }
+    setFacultyToken(localStorage.getItem("facultyToken"));
   }, [navigate]);
 
   const markChangeHandler = (value, _id) => {
@@ -50,17 +52,26 @@ function MarkAttendance() {
 
   const submitHandler = async (event) => {
     event.preventDefault();
+    const headers = {
+      Authorization: `${facultyToken}`,
+    };
     await axios
-      .post("http://localhost:4000/faculty/uploadMarks", {
-        department,
-        year,
-        section,
-      })
+      .post(
+        "http://localhost:4000/faculty/uploadMarks",
+        {
+          department,
+          year,
+          section,
+        },
+        { headers: headers }
+      )
       .then((res) => {
         setStudents(res.data.data);
         setAllSubjectCode(res.data.allSubjectCode);
       })
-      .catch((err) => console.log(err.message));
+      .catch((err) => {
+        window.alert(err.response.data.message);
+      });
   };
   const secondSubmitHandler = async (event) => {
     event.preventDefault();
@@ -75,21 +86,16 @@ function MarkAttendance() {
         totalMark,
       })
       .then((res) => {
-        // if (res.data.status === 400) {
-        //   window.alert(res.data.message);
-        // }
-        // if (res.data.status === 200) {
-
-        // }
         window.alert(res.data.message);
         navigate("/faculty");
       })
-      .catch((err) => console.log("jhjhkgj"));
+      .catch((err) => {
+        window.alert(err.response.data.message);
+      });
   };
   return (
     <Fragment>
       <NavbarFaculty />
-
       <Grid container alignItems="center" justifyContent="center">
         {!students.length && (
           <Grid item xs={12} md={6}>

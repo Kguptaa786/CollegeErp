@@ -76,8 +76,7 @@ function AddAdmin() {
         setContactNumber("");
       })
       .catch((err) => {
-        console.log(err);
-        window.alert("All field required");
+        window.alert(err.response.data.message);
       });
   };
 
@@ -85,7 +84,7 @@ function AddAdmin() {
     <>
       <NavbarAdmin />
       <Grid container alignItems="center" justifyContent="center">
-        <Grid xs={12} md={6}>
+        <Grid item xs={8} md={6}>
           <form onSubmit={submitHandler} noValidate>
             <FormControl fullWidth sx={{ m: 2 }}>
               <TextField
