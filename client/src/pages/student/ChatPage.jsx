@@ -11,7 +11,7 @@ import "./ChatPage.css";
 import Message from "./ChatPageHelper/Message";
 
 let socket;
-
+const endpoint = "http://localhost:4000";
 //Swap HelperFunction
 function swap(input, value_1, value_2) {
   var temp = input[value_1];
@@ -20,6 +20,7 @@ function swap(input, value_1, value_2) {
 }
 function ChatPage() {
   const ENDPOINT = useContext(EndPointContext).ENDPOINT;
+
   const navigate = useNavigate();
   const params = useParams();
   const [room1, setRoom1] = useState("");
@@ -42,14 +43,14 @@ function ChatPage() {
   //setting room variable
   useEffect(() => {
     let temp = params.roomId;
-    socket = io(ENDPOINT);
+    socket = io(endpoint);
     let tempArr = temp.split("_");
     setReceiverRegistrationNumber(tempArr[0]);
     setRoom1(temp);
     swap(tempArr, 0, 1);
     let tempRoom2 = tempArr[0] + "_" + tempArr[1];
     setRoom2(tempRoom2);
-  }, [ENDPOINT, params.roomId]);
+  }, [params.roomId]);
 
   useEffect(() => {
     let temp = params.roomId;
@@ -63,7 +64,7 @@ function ChatPage() {
   }, [params.roomId, ENDPOINT]);
   //setting socket endpoint
   useEffect(() => {
-    socket = io(ENDPOINT);
+    socket = io(endpoint);
     socket.emit("join room", {
       room1,
       room2,
@@ -77,7 +78,7 @@ function ChatPage() {
       // socket.emit("disconnect");
       // socket.off();
     };
-  }, [room1, room2, messageArray, ENDPOINT]);
+  }, [room1, room2, messageArray]);
 
   // useEffect(() => {
   //   axios
@@ -157,7 +158,7 @@ function ChatPage() {
             <ReactScrollToBottom className="chatBox">
               {olderMessages !== undefined &&
                 olderMessages.map((payload, index) =>
-                  payload.senderName !== student.name ? (
+                  payload.senderName === student.name ? (
                     <Message
                       recieverName=""
                       key={index}
@@ -166,30 +167,30 @@ function ChatPage() {
                     />
                   ) : (
                     <Message
-                      recieverName={payload.receiverName}
+                      recieverName={payload.senderName}
                       key={index}
                       message={payload.message}
                       classs="left"
                     />
                   )
                 )}
-              {messageArray.map((payload, index) =>
-                payload.senderName === student.name ? (
+              {/* {messageArray.map((payload, index) =>
+                payload.senderName !== student.name ? (
                   <Message
-                    user=""
+                    recieverName=""
                     key={index}
                     message={payload.message}
                     classs="right"
                   />
                 ) : (
                   <Message
-                    user={payload.receiverName}
+                    recieverName={payload.receiverName}
                     key={index}
                     message={payload.message}
                     classs="left"
                   />
                 )
-              )}
+              )} */}
             </ReactScrollToBottom>
             <form onSubmit={formHandler}>
               <div className="inputBox">
