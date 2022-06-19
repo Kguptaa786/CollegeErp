@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import EndPointContext from "../../context/EndPointContext";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
 import io from "socket.io-client";
@@ -18,6 +19,7 @@ function swap(input, value_1, value_2) {
   input[value_2] = temp;
 }
 function ChatPage() {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const params = useParams();
   const [room1, setRoom1] = useState("");
@@ -29,7 +31,6 @@ function ChatPage() {
   const [message, setMessage] = useState("");
   const [messageArray, setMessageArray] = useState([]);
   const [olderMessages, setOlderMessages] = useState([]);
-  const ENDPOINT = "http://localhost:4000";
 
   useEffect(() => {
     if (localStorage.getItem("studentToken") === null) {
@@ -54,12 +55,12 @@ function ChatPage() {
     let temp = params.roomId;
     let tempArr = temp.split("_");
     axios
-      .get(`http://localhost:4000/student/${tempArr[0]}`)
+      .get(ENDPOINT + `student/${tempArr[0]}`)
       .then((res) => {
         setReceiverName(res.data.student.name);
       })
       .catch((err) => console.log(err));
-  }, [params.roomId]);
+  }, [params.roomId, ENDPOINT]);
   //setting socket endpoint
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -76,7 +77,7 @@ function ChatPage() {
       // socket.emit("disconnect");
       // socket.off();
     };
-  }, [room1, room2, messageArray]);
+  }, [room1, room2, messageArray, ENDPOINT]);
 
   // useEffect(() => {
   //   axios
@@ -108,7 +109,7 @@ function ChatPage() {
 
       //axios post sendmessage
       await axios
-        .post(`http://localhost:4000/student/chat/${room1}`, {
+        .post(ENDPOINT + `student/chat/${room1}`, {
           roomId: room1,
           senderName: student.name,
           senderId: student.id,
@@ -133,13 +134,13 @@ function ChatPage() {
   // }, [room1]);
 
   useEffect(() => {
-    axios.get(`http://localhost:4000/student/chat/${room1}`).then((res) => {
+    axios.get(ENDPOINT + `student/chat/${room1}`).then((res) => {
       setOlderMessages(res.data.result);
     });
     socket.on("new Message", (data) => {
       setMessageArray([...messageArray, data]);
     });
-  }, [messageArray, room1]);
+  }, [messageArray, room1, ENDPOINT]);
 
   return (
     <>

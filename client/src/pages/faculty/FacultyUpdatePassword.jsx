@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
+import EndPointContext from "../../context/EndPointContext";
 import { useNavigate } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import axios from "axios";
@@ -12,6 +13,7 @@ import {
 } from "@mui/material";
 import NavbarFaculty from "../../components/NavbarFaculty";
 function FacultyUpdatePassword(props) {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -42,7 +44,7 @@ function FacultyUpdatePassword(props) {
     }
     await axios
       .post(
-        "http://localhost:4000/faculty/updatePassword",
+        ENDPOINT + "faculty/updatePassword",
         {
           oldPassword,
           newPassword,

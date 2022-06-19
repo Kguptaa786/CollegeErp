@@ -57,6 +57,10 @@ app.use("/", studentRoutes);
 app.use("/", facultyRoutes);
 
 //db connection
+// const Connection = require("./connection/connection");
+// const DB_URL =
+//   process.env.DB_URL || "mongodb://localhost:27017/collegeErpDatabase";
+// Connection(DB_URL);
 require("./connection/connection");
 
 server.listen(port, () => {

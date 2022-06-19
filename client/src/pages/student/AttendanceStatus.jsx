@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
+import EndPointContext from "../../context/EndPointContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -14,6 +15,7 @@ import {
 import NavbarStudent from "../../components/NavbarStudent";
 
 function AttendanceStatus() {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const [results, setResults] = useState({});
 
@@ -29,14 +31,13 @@ function AttendanceStatus() {
     };
 
     const helper = async () => {
-      const res = await axios.get(
-        "http://localhost:4000/student/attendanceStatus",
-        { headers: headers }
-      );
+      const res = await axios.get(ENDPOINT + "student/attendanceStatus", {
+        headers: headers,
+      });
       setResults(res.data.result);
     };
     helper();
-  }, []);
+  }, [ENDPOINT]);
 
   return (
     <Fragment>

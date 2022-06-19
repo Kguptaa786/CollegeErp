@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
+import EndPointContext from "../../context/EndPointContext";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +16,7 @@ import {
 import NavbarStudent from "../../components/NavbarStudent";
 
 function TestPerformance() {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const [results, setResults] = useState({});
   const [test1, setTest1] = useState({});
@@ -33,19 +35,16 @@ function TestPerformance() {
     };
 
     const helper = async () => {
-      const res = await axios.get(
-        "http://localhost:4000/student/testPerformance",
-        {
-          headers: headers,
-        }
-      );
+      const res = await axios.get(ENDPOINT + "student/testPerformance", {
+        headers: headers,
+      });
       setResults(res.data.result);
       setTest1(res.data.result.test1);
       setTest2(res.data.result.test2);
       setTest3(res.data.result.test3);
     };
     helper();
-  }, []);
+  }, [ENDPOINT]);
   return (
     <Fragment>
       <NavbarStudent />

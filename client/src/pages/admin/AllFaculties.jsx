@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
+import EndPointContext from "../../context/EndPointContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -38,6 +39,7 @@ const useStyles = makeStyles({
 });
 
 function AllFaculties() {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const classes = useStyles();
   const [department, setDepartment] = useState("");
@@ -58,7 +60,7 @@ function AllFaculties() {
     };
     await axios
       .post(
-        "http://localhost:4000/admin/allFaculties",
+        ENDPOINT + "admin/allFaculties",
         { department },
         { headers: headers }
       )
@@ -67,6 +69,7 @@ function AllFaculties() {
       })
       .catch((err) => {
         window.alert(err.response.data.message);
+        setDepartment("");
       });
   };
   return (

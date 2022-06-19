@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
@@ -8,6 +9,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import NavbarStudent from "../../components/NavbarStudent";
 import axios from "axios";
+import EndPointContext from "../../context/EndPointContext";
 const useStyles = makeStyles({
   root: {
     position: "absolute",
@@ -19,6 +21,7 @@ const useStyles = makeStyles({
 });
 
 function PeerStudent(props) {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const classes = useStyles();
   const params = useParams();
   const navigate = useNavigate();
@@ -36,10 +39,10 @@ function PeerStudent(props) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/student/${params.registrationNumber}`)
+      .get(ENDPOINT + `student/${params.registrationNumber}`)
       .then((res) => setStudent(res.data.student))
       .catch((e) => console.log(e));
-  }, [params.registrationNumber]);
+  }, [params.registrationNumber, ENDPOINT]);
 
   return (
     <>

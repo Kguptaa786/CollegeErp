@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -17,6 +17,7 @@ import {
 import NavbarAdmin from "../../components/NavbarAdmin";
 
 import { makeStyles } from "@mui/styles";
+import EndPointContext from "../../context/EndPointContext";
 
 const useStyles = makeStyles({
   root: {
@@ -31,6 +32,7 @@ const useStyles = makeStyles({
 });
 
 function AddAdmin() {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const classes = useStyles();
   const [name, setName] = useState("");
@@ -55,7 +57,7 @@ function AddAdmin() {
     };
     await axios
       .post(
-        "http://localhost:4000/admin/addAdmin",
+        ENDPOINT + "admin/addAdmin",
         {
           name,
           email,

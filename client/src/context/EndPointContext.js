@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 const EndPointContext = createContext();
 function EndPointContextProvider(props) {
-  const ENDPOINT = "http://localhost:4000/";
+  const ENDPOINT = "";
   return (
     <EndPointContext.Provider value={{ ENDPOINT }}>
       {props.children}

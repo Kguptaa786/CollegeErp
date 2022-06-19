@@ -1,4 +1,5 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useContext } from "react";
+import EndPointContext from "../../context/EndPointContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -12,13 +13,14 @@ import {
 } from "@mui/material";
 
 function AdminLogin(props) {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const [registrationNumber, setRegistrationNumber] = useState("");
   const [password, setPassword] = useState("");
   const submitHandler = async (event) => {
     event.preventDefault();
     await axios
-      .post("http://localhost:4000/adminLogin", {
+      .post(ENDPOINT + "adminLogin", {
         registrationNumber,
         password,
       })

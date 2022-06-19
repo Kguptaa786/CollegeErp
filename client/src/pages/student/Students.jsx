@@ -1,5 +1,6 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import axios from "axios";
+import EndPointContext from "../../context/EndPointContext";
 import { useNavigate, Link } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 import {
@@ -20,6 +21,7 @@ import {
 import NavbarStudent from "../../components/NavbarStudent";
 
 function Students() {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const [department, setDepartment] = useState("");
   const [year, setYear] = useState("");
@@ -45,7 +47,7 @@ function Students() {
     };
     await axios
       .post(
-        "http://localhost:4000/student/students",
+        ENDPOINT + "student/students",
         {
           currRegistrationNumber,
           department,

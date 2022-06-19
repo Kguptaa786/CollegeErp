@@ -1,4 +1,5 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
+import EndPointContext from "../../context/EndPointContext";
 import axios from "axios";
 import {
   Grid,
@@ -27,6 +28,7 @@ const useStyles = makeStyles({
 });
 
 function AddSubject() {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const classes = useStyles();
   const [name, setName] = useState("");
@@ -50,7 +52,7 @@ function AddSubject() {
     };
     await axios
       .post(
-        "http://localhost:4000/admin/addSubject",
+        ENDPOINT + "admin/addSubject",
         {
           name,
           subjectCode,

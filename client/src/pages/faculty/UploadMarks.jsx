@@ -1,4 +1,5 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useContext } from "react";
+import EndPointContext from "../../context/EndPointContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -20,6 +21,7 @@ import {
 import NavbarFaculty from "../../components/NavbarFaculty";
 
 function MarkAttendance() {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const [department, setDepartment] = useState("");
   const [year, setYear] = useState("");
@@ -57,7 +59,7 @@ function MarkAttendance() {
     };
     await axios
       .post(
-        "http://localhost:4000/faculty/uploadMarks",
+        ENDPOINT + "faculty/uploadMarks",
         {
           department,
           year,
@@ -76,7 +78,7 @@ function MarkAttendance() {
   const secondSubmitHandler = async (event) => {
     event.preventDefault();
     await axios
-      .post("http://localhost:4000/faculty/uploadMarksHelper", {
+      .post(ENDPOINT + "faculty/uploadMarksHelper", {
         department,
         year,
         section,

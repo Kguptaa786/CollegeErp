@@ -1,14 +1,9 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+import EndPointContext from "../../context/EndPointContext";
 import { useNavigate } from "react-router-dom";
 import {
   Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  Button,
-  MenuItem,
   Paper,
   Table,
   TableHead,
@@ -20,6 +15,7 @@ import {
 import NavbarStudent from "../../components/NavbarStudent";
 
 function SubjectList() {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const [subjects, setSubjects] = useState({});
 
@@ -35,13 +31,13 @@ function SubjectList() {
     };
 
     const helper = async () => {
-      const res = await axios.get("http://localhost:4000/student/subjectList", {
+      const res = await axios.get(ENDPOINT + "student/subjectList", {
         headers: headers,
       });
       setSubjects(res.data.subjects);
     };
     helper();
-  }, []);
+  }, [ENDPOINT]);
 
   return (
     <Fragment>

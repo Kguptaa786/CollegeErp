@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
+import EndPointContext from "../../context/EndPointContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {
@@ -19,6 +20,7 @@ import {
 import NavbarAdmin from "../../components/NavbarAdmin";
 
 function AllStudents() {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const [department, setDepartment] = useState("");
   const [year, setYear] = useState("");
@@ -39,7 +41,7 @@ function AllStudents() {
     };
     await axios
       .post(
-        "http://localhost:4000/admin/allStudents",
+        ENDPOINT + "admin/allStudents",
         {
           department,
           year,
@@ -51,6 +53,8 @@ function AllStudents() {
       })
       .catch((err) => {
         window.alert(err.response.data.message);
+        setDepartment("");
+        setYear("");
       });
   };
   return (

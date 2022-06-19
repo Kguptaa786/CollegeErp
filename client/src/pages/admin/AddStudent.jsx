@@ -1,4 +1,5 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
+import EndPointContext from "../../context/EndPointContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
@@ -18,6 +19,7 @@ import {
 import NavbarAdmin from "../../components/NavbarAdmin";
 
 function AddStudent() {
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -45,7 +47,7 @@ function AddStudent() {
     };
     await axios
       .post(
-        "http://localhost:4000/admin/addStudent",
+        ENDPOINT + "admin/addStudent",
         {
           name,
           email,
