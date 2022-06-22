@@ -60,20 +60,24 @@ module.exports = {
   allStudents: async (req, res) => {
     const { currRegistrationNumber, department, section, year } = req.body;
     if (!department || !section || !year) {
-      return res
-        .status(400)
-        .json({ success: false, message: "All fields required" });
+      return res.status(400).json({
+        success: false,
+        message: "All fields required",
+      });
     }
     let students = await Student.find({ department, year, section });
-    if (!students) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No student found" });
-    }
     let filteredArr = students.filter(
       (student) => student.registrationNumber !== currRegistrationNumber
     );
     students = filteredArr;
+    if (!students.length) {
+      return res.status(200).json({
+        success: false,
+        message: "No student found",
+        students: students,
+      });
+    }
+
     return res.status(200).json({
       success: true,
       message: "All Students are....",

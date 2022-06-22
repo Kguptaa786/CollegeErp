@@ -44,42 +44,44 @@ function AttendanceStatus() {
       <NavbarStudent />
       <Grid container alignItems="center" justifyContent="center">
         <Grid item xs={12} md={8}>
-          <TableContainer component={Paper} sx={{ mt: 2 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    S.No
-                  </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Subject Code
-                  </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Subject Name
-                  </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Maximum Hours
-                  </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Present Hours
-                  </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Absent Hours
-                  </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Total Hours
-                  </TableCell>
-                  <TableCell align="center" sx={{ fontWeight: "bold" }}>
-                    Attendance
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {results.length &&
-                  results.map((result, index) => (
+          {results !== undefined && results.length ? (
+            <TableContainer component={Paper} sx={{ mt: 2 }}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      S.No
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      Subject Code
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      Subject Name
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      Maximum Hours
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      Present Hours
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      Absent Hours
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      Total Hours
+                    </TableCell>
+                    <TableCell align="center" sx={{ fontWeight: "bold" }}>
+                      Attendance
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {results.map((result, index) => (
                     <TableRow
                       key={index}
-                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                      sx={{
+                        "&:last-child td, &:last-child th": { border: 0 },
+                      }}
                     >
                       <TableCell align="center" component="th" scope="row">
                         {index + 1}
@@ -97,9 +99,12 @@ function AttendanceStatus() {
                       <TableCell align="center">{result.attendance}</TableCell>
                     </TableRow>
                   ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <p>Attendance is not uploaded yet</p>
+          )}
         </Grid>
       </Grid>
     </Fragment>

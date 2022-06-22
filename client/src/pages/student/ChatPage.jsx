@@ -96,8 +96,6 @@ function ChatPage() {
   // }, [olderMessages, room1, room2]);
 
   const formHandler = async (e) => {
-    console.log(student.name);
-    console.log(receiverName);
     e.preventDefault();
     if (message.trim().length > 0) {
       socket.emit("private message", {
@@ -110,7 +108,7 @@ function ChatPage() {
 
       //axios post sendmessage
       await axios
-        .post(ENDPOINT + `student/chat/${room1}`, {
+        .post(`${ENDPOINT}student/chat/${room1}`, {
           roomId: room1,
           senderName: student.name,
           senderId: student.id,
@@ -135,7 +133,7 @@ function ChatPage() {
   // }, [room1]);
 
   useEffect(() => {
-    axios.get(ENDPOINT + `student/chat/${room1}`).then((res) => {
+    axios.get(`${ENDPOINT}student/chat/${room1}`).then((res) => {
       setOlderMessages(res.data.result);
     });
     socket.on("new Message", (data) => {

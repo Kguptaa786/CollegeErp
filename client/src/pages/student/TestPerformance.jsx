@@ -35,7 +35,7 @@ function TestPerformance() {
     };
 
     const helper = async () => {
-      const res = await axios.get(ENDPOINT + "student/testPerformance", {
+      const res = await axios.get(`${ENDPOINT}student/testPerformance`, {
         headers: headers,
       });
       setResults(res.data.result);
@@ -45,6 +45,7 @@ function TestPerformance() {
     };
     helper();
   }, [ENDPOINT]);
+
   return (
     <Fragment>
       <NavbarStudent />
@@ -53,7 +54,7 @@ function TestPerformance() {
           {(results === undefined || results.length === 0) && (
             <h2>No Mark Uploaded</h2>
           )}
-          {test1 !== undefined && test1.length && (
+          {test1 !== undefined && test1.length ? (
             <>
               <h3>TEST1</h3>
               <TableContainer component={Paper} sx={{ mt: 2 }}>
@@ -111,8 +112,10 @@ function TestPerformance() {
                 </Table>
               </TableContainer>
             </>
+          ) : (
+            <p>Test 1 mark is not uploaded</p>
           )}
-          {test2 !== undefined && test2.length && (
+          {test2 !== undefined && test2.length ? (
             <>
               <h3>TEST2</h3>
               <TableContainer component={Paper} sx={{ mt: 2 }}>
@@ -170,8 +173,10 @@ function TestPerformance() {
                 </Table>
               </TableContainer>
             </>
+          ) : (
+            <p>Test 2 mark is not uploaded</p>
           )}
-          {test3 !== undefined && test3.length && (
+          {test3 !== undefined && test3.length ? (
             <>
               <h3>TEST3</h3>
               <TableContainer component={Paper} sx={{ mt: 2 }}>
@@ -229,6 +234,8 @@ function TestPerformance() {
                 </Table>
               </TableContainer>
             </>
+          ) : (
+            <p>Test 3 mark is not uploaded</p>
           )}
         </Grid>
       </Grid>

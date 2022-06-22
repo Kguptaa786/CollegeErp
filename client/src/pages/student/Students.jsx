@@ -59,6 +59,7 @@ function Students() {
       .then((res) => {
         // console.log(res.data.students);
         setStudents(res.data.students);
+        window.alert(res.data.message);
       })
       .catch((err) => {
         window.alert(err.response.data.message);
