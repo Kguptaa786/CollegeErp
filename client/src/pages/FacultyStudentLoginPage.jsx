@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Grid,
   Container,
@@ -89,6 +89,7 @@ function FacultyStudentLoginPage(props) {
   };
   return (
     <>
+      <Link to="/adminLogin">Admin Login</Link>
       <div className={classes.bgImage}>
         <Grid container alignItems="center" justifyContent="end">
           <Grid item xs={12} md={4}>
