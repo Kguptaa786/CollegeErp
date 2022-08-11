@@ -23,7 +23,7 @@ import ChatPage from "./pages/student/ChatPage";
 import SubjectList from "./pages/student/SubjectList";
 import AttendanceStatus from "./pages/student/AttendanceStatus";
 import TestPerformance from "./pages/student/TestPerformance";
-
+import Conversation from "./pages/student/Conversation";
 function AllRoutes() {
   return (
     <Routes>
@@ -46,6 +46,7 @@ function AllRoutes() {
         element={<FacultyUpdatePassword />}
       />
       <Route path="/student" element={<StudentProfile />} />
+      <Route path="/student/conversation" element={<Conversation />} />
       <Route path="/student/:registrationNumber" element={<PeerStudent />} />
       <Route path="/student/students" element={<Students />} />
       <Route path="/student/subjectList" element={<SubjectList />} />
@@ -54,6 +55,7 @@ function AllRoutes() {
         path="/student/updatePassword"
         element={<StudentUpdatePassword />}
       />
+
       <Route path="/student/testPerformance" element={<TestPerformance />} />
       <Route path="/student/chat/:roomId" element={<ChatPage />} />
     </Routes>

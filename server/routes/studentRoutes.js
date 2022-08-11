@@ -10,6 +10,7 @@ const {
   getPrivateChat,
   postPrivateChat,
   subjectList,
+  getConversationDetail,
   testPerformance,
   updatePassword,
 } = require("../controllers/studentcontroller");
@@ -44,6 +45,12 @@ router.post(
   "/student/updatePassword",
   passport.authenticate("jwt", { session: false }),
   updatePassword
+);
+
+router.get(
+  "/student/conversation",
+  passport.authenticate("jwt", { session: false }),
+  getConversationDetail
 );
 
 router.get("/student/:registrationNumber", getStudentDetail);

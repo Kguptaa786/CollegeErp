@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import EndPointContext from "../context/EndPointContext";
+import axios from "axios";
 import { useNavigate, Link, NavLink } from "react-router-dom";
-
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,12 +16,14 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { makeStyles } from "@mui/styles";
+import { useEffect } from "react";
 const Links = [
   { keyVal: 1, page: "Test Performance", path: "/student/testPerformance" },
   { keyVal: 2, page: "Subject List", path: "/student/subjectList" },
   { keyVal: 3, page: "Attendance Status", path: "/student/attendanceStatus" },
   { keyVal: 4, page: "Students", path: "/student/students" },
   { keyVal: 5, page: "Update Password", path: "/student/updatePassword" },
+  { keyVal: 6, page: "Conversation", path: "/student/conversation" },
 ];
 
 const useStyles = makeStyles({
@@ -42,7 +45,31 @@ const useStyles = makeStyles({
 
 const ResponsiveAppBar = () => {
   const navigate = useNavigate();
+  const [len, setLen] = useState(0);
   const classes = useStyles();
+
+  const ENDPOINT = useContext(EndPointContext).ENDPOINT;
+
+  useEffect(() => {
+    if (localStorage.getItem("studentToken") === null) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  useEffect(() => {
+    const headers = {
+      Authorization: `${localStorage.getItem("studentToken")}`,
+    };
+
+    const helper = async () => {
+      const res = await axios.get(ENDPOINT + "student/conversation", {
+        headers: headers,
+      });
+      setLen(res.data.conversations.length);
+    };
+    helper();
+    console.log(len);
+  }, [ENDPOINT, len]);
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -125,8 +152,10 @@ const ResponsiveAppBar = () => {
                       to={Link.path}
                       style={{ textDecoration: "none", color: "black" }}
                     >
-                      {Link.page}
-                    </NavLink>{" "}
+                      {Link.page === "Conversation"
+                        ? Link.page + " (" + len.toString() + ")"
+                        : Link.page}
+                    </NavLink>
                   </Typography>
                 </MenuItem>
               ))}
@@ -155,7 +184,9 @@ const ResponsiveAppBar = () => {
                 }}
                 sx={{ my: 2, color: "white", display: "block" }}
               >
-                {Link.page}
+                {Link.page === "Conversation"
+                  ? Link.page + " (" + len.toString() + ")"
+                  : Link.page}
               </Button>
             ))}
           </Box>

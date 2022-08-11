@@ -89,7 +89,6 @@ function FacultyStudentLoginPage(props) {
   };
   return (
     <>
-      <Link to="/adminLogin">Admin Login</Link>
       <div className={classes.bgImage}>
         <Grid container alignItems="center" justifyContent="end">
           <Grid item xs={12} md={4}>

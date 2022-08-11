@@ -6,6 +6,7 @@ const jwt_decode = require("jwt-decode");
 const Subject = require("../models/subject");
 const Attendance = require("../models/attendance");
 const Mark = require("../models/mark");
+const Conversation = require("../models/conversation");
 const secretOrKey = process.env.SECRET_OR_KEY;
 
 module.exports = {
@@ -194,6 +195,20 @@ module.exports = {
         message,
       } = req.body;
 
+      const conversation = await Conversation.find({ roomId });
+      if (conversation.length === 0) {
+        const newConversation = await new Conversation({
+          roomId,
+          receiverRegistrationNumber,
+          senderRegistrationNumber,
+          date: Date.now(),
+        });
+        await newConversation.save();
+      } else {
+        conversation.date = Date.now();
+        await conversation.save();
+      }
+
       const receiverStudent = await Student.findOne({
         registrationNumber: receiverRegistrationNumber,
       });
@@ -251,6 +266,20 @@ module.exports = {
         .json({ success: true, message: "Password update successfully" });
     } catch (err) {
       console.log(err);
+    }
+  },
+  getConversationDetail: async (req, res) => {
+    try {
+      // console.log(req.user);
+      const conversations = await Conversation.find({
+        receiverRegistrationNumber: req.user.registrationNumber,
+      });
+      // console.log(conversation);
+      return res
+        .status(200)
+        .json({ message: "All conversation", conversations: conversations });
+    } catch (error) {
+      console.log(error);
     }
   },
 };
